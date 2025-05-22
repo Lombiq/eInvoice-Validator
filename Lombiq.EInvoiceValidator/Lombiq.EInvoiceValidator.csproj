@@ -21,54 +21,6 @@
 
   <ItemGroup>
     <None Include="NuGetIcon.png" Pack="true" PackagePath="" />
-    <None Update="Assets\Scripts\validator.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SchemaFiles\UBL\maindoc\UBL-Invoice-2.1.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SchemaFiles\UBL\common\CCTS_CCT_SchemaModule-2.1.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SchemaFiles\UBL\common\UBL-CommonAggregateComponents-2.1.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SchemaFiles\UBL\common\UBL-CommonBasicComponents-2.1.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SchemaFiles\UBL\common\UBL-CommonExtensionComponents-2.1.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SchemaFiles\UBL\common\UBL-CommonSignatureComponents-2.1.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SchemaFiles\UBL\common\UBL-CoreComponentParameters-2.1.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SchemaFiles\UBL\common\UBL-ExtensionContentDataType-2.1.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SchemaFiles\UBL\common\UBL-QualifiedDataTypes-2.1.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SchemaFiles\UBL\common\UBL-SignatureAggregateComponents-2.1.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SchemaFiles\UBL\common\UBL-SignatureBasicComponents-2.1.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SchemaFiles\UBL\common\UBL-UnqualifiedDataTypes-2.1.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SchemaFiles\UBL\common\UBL-XAdESv132-2.1.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SchemaFiles\UBL\common\UBL-XAdESv141-2.1.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SchemaFiles\UBL\common\UBL-xmldsig-core-schema-2.1.xsd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -84,10 +36,31 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="SaxonJsStylesheets\" />
-    <Folder Include="SchemaFiles\CII\" />
-    <Folder Include="SchemaFiles\UBL\" />
+    <None Update="node_modules/**/*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+
+    <None Remove="SchemaFiles\CII\*.xsd" />
+    <EmbeddedResource Include="SchemaFiles\CII\*.xsd" />
+    <None Remove="SchemaFiles\UBL\common\*.xsd" />
+    <EmbeddedResource Include="SchemaFiles\UBL\common\*.xsd" />
+    <None Remove="SchemaFiles\UBL\maindoc\UBL-Invoice-2.1.xsd" />
+    <EmbeddedResource Include="SchemaFiles\UBL\maindoc\UBL-Invoice-2.1.xsd" />
+
+    <None Remove="JsonStylesheets\*.sef.json" />
+    <EmbeddedResource Include="JsonStylesheets\*.sef.json" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="validator.js" />
+    <Content Include="validator.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PnpmInstallCommand>pnpm install --shamefully-flatten</PnpmInstallCommand>
+  </PropertyGroup>
 
   <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\..\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
 

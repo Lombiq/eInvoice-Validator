@@ -29,8 +29,8 @@ Set-Location $PSScriptRoot
 Write-Host "Checked out latest release to: $eInvoiceRepositoryTargetDir"
 
 
-xslt3 "-t" "-xsl:$eInvoiceRepositoryTargetDir/cii/xslt/EN16931-CII-validation.xslt" "-export:SaxonJsStylesheets/EN16931-CII-validation.sef.json" "-nogo" "-relocate:on" "-ns:##html5"
-xslt3 "-t" "-xsl:$eInvoiceRepositoryTargetDir/ubl/xslt/EN16931-UBL-validation.xslt" "-export:SaxonJsStylesheets/EN16931-UBL-validation.sef.json" "-nogo" "-relocate:on" "-ns:##html5"
+xslt3 "-t" "-xsl:$eInvoiceRepositoryTargetDir/cii/xslt/EN16931-CII-validation.xslt" "-export:JsonStylesheets/EN16931-CII-validation.sef.json" "-nogo" "-relocate:on" "-ns:##html5"
+xslt3 "-t" "-xsl:$eInvoiceRepositoryTargetDir/ubl/xslt/EN16931-UBL-validation.xslt" "-export:JsonStylesheets/EN16931-UBL-validation.sef.json" "-nogo" "-relocate:on" "-ns:##html5"
 
 # Copy all cii *.xsd files to SchemaFiles
 $ciiXsdFolder = "$eInvoiceRepositoryTargetDir/cii/schema/D16B SCRDM (Subset)/uncoupled clm/CII/uncefact/data/standard"

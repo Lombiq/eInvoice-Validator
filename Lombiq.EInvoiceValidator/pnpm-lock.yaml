@@ -5,15 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  axios:
-    specifier: 1.9.0
-    version: 1.9.0
-  combined-stream:
-    specifier: 1.0.8
-    version: 1.0.8
-  form-data:
-    specifier: 4.0.2
-    version: 4.0.2
   saxon-js:
     specifier: 2.7.0
     version: 2.7.0

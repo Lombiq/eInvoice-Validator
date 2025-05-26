@@ -9,11 +9,13 @@ public static class EInvoiceStartupExtensions
 {
     public static void AddEInvoiceValidationServices(this IServiceCollection services)
     {
+        // Add Node.js wrapper services.
         services.AddNodeJS();
         services.Configure<NodeJSProcessOptions>(options =>
             options.ProjectPath = Path.GetDirectoryName(typeof(EInvoiceXmlSchemaSet).Assembly.Location) ?? Directory.GetCurrentDirectory());
         services.Configure<OutOfProcessNodeJSServiceOptions>(options => options.Concurrency = Concurrency.MultiProcess);
 
+        // Add E-Invoice validation services.
         services.AddSingleton<IEInvoiceXmlSchemaSet, EInvoiceXmlSchemaSet>();
     }
 }

@@ -5,7 +5,6 @@ using Lombiq.EInvoiceValidator.Services;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;
@@ -15,7 +14,7 @@ namespace Lombiq.EInvoiceValidator.Tests.UnitTests;
 public class ValidatorTests
 {
     [Fact]
-    public async Task TestValidation()
+    public async Task TestInvoiceValidationHelper()
     {
         var services = new ServiceCollection();
         services.AddEInvoiceValidationServices();

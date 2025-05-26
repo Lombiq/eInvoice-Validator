@@ -1,10 +1,10 @@
 ﻿using EInvoiceValidator.Benchmark.Models;
 using Jering.Javascript.NodeJS;
-using Lombiq.EInvoiceValidator.Helpers;
 using Lombiq.EInvoiceValidator.Models;
 using Lombiq.EInvoiceValidator.Services;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
@@ -12,9 +12,68 @@ namespace EInvoiceValidator.Benchmark.Helpers;
 
 public static class ValidationBenchmarkHelpers
 {
-    public static async Task<InvoiceValidationResult> ValidateAsync(
+    // Set the benchmark parameters.
+    private const int BatchSize = 200;
+    private const int BatchCount = 10;
+    private const int MinDelayBetweenBatchesMs = 1000;
+    private const bool DoWarmup = true;
+
+    public static async Task RunBenchMarkAsync(
+        IServiceProvider serviceProvider,
+        Func<Stream, INodeJSService, IMemoryCache, IEInvoiceXmlSchemaSet, Task<InvoiceValidationResult>> action)
+    {
+        // Warmup run before benchmark.
+        if (DoWarmup)
+        {
+            Console.WriteLine($"Warming up by running {BatchSize} validations...");
+            await RunValidationForBatchAsync(serviceProvider, action, 1);
+        }
+
+        var results = new List<BenchmarkRunResult>();
+        for (int batchIndex = 0; batchIndex < BatchCount; batchIndex++)
+        {
+            Console.WriteLine($"Starting batch {(batchIndex + 1).ToTechnicalString()} of {BatchCount}...");
+            var stopwatch = Stopwatch.StartNew();
+
+            var batchResults = await RunValidationForBatchAsync(serviceProvider, action, batchIndex);
+
+            stopwatch.Stop();
+
+            results.AddRange(batchResults);
+
+            var remainingDelay = MinDelayBetweenBatchesMs - stopwatch.ElapsedMilliseconds;
+            if (remainingDelay > 0)
+            {
+                Console.WriteLine($"Waiting {remainingDelay.ToTechnicalString()} ms before next batch.");
+                await Task.Delay((int)remainingDelay);
+            }
+        }
+
+        // Get average durations and save to file.
+        var formattedLog = await SaveToFileAsync(results);
+        Console.WriteLine(formattedLog);
+    }
+
+    private static async Task<BenchmarkRunResult[]> RunValidationForBatchAsync(
+        IServiceProvider serviceProvider,
+        Func<Stream, INodeJSService, IMemoryCache, IEInvoiceXmlSchemaSet, Task<InvoiceValidationResult>> action,
+        int batchIndex)
+    {
+        var filePaths = Directory.GetFiles(Path.Combine("SampleInvoices"), "*.xml", SearchOption.AllDirectories);
+        var filesInBatch = Enumerable
+            .Range(0, BatchSize)
+            .Select(i => filePaths[((batchIndex * BatchSize) + i) % filePaths.Length])
+            .ToList();
+
+        // Run the validations in parallel.
+        var batchResults = await Task.WhenAll(filesInBatch.Select(filePath => ValidateAsync(filePath, serviceProvider, action)));
+        return batchResults;
+    }
+
+    private static async Task<BenchmarkRunResult> ValidateAsync(
         string filePath,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        Func<Stream, INodeJSService, IMemoryCache, IEInvoiceXmlSchemaSet, Task<InvoiceValidationResult>> action)
     {
         var nodeJsService = serviceProvider.GetRequiredService<INodeJSService>();
         var memoryCache = serviceProvider.GetRequiredService<IMemoryCache>();
@@ -22,26 +81,20 @@ public static class ValidationBenchmarkHelpers
 
         using var streamReaderInner = new StreamReader(filePath);
 
+        var stopwatch = Stopwatch.StartNew();
         // Call validation.
-        var result = await InvoiceValidationHelper.ValidateInvoiceAsync(
-            streamReaderInner.BaseStream,
-            nodeJsService,
-            memoryCache,
-            eInvoiceXmlSchemaSet);
+        var result = await action(streamReaderInner.BaseStream, nodeJsService, memoryCache, eInvoiceXmlSchemaSet);
+        stopwatch.Stop();
 
         if (result.SchematronValidationResult!.ErrorFailedAsserts.Count > 0)
         {
             Console.WriteLine($"Errors in {filePath}:");
         }
 
-        return result;
+        return new BenchmarkRunResult { Result = result, ElapsedMilliseconds = stopwatch.ElapsedMilliseconds };
     }
 
-    public static async Task<string> SaveToFileAsync(
-        IList<InvoiceValidationResult> results,
-        int batchSize,
-        int batchCount,
-        int minDelayBetweenBatchesMs)
+    private static async Task<string> SaveToFileAsync(IList<BenchmarkRunResult> results)
     {
         var averageDurations = AverageDurations(results);
         var logBuilder = new StringBuilder();
@@ -49,15 +102,15 @@ public static class ValidationBenchmarkHelpers
         logBuilder.AppendLine("# Benchmark Results");
         logBuilder.AppendLine();
         logBuilder.AppendLine(CultureInfo.InvariantCulture, $"- **Run Timestamp:** {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC");
-        logBuilder.AppendLine(CultureInfo.InvariantCulture, $"- **Batch Size:** {batchSize}");
-        logBuilder.AppendLine(CultureInfo.InvariantCulture, $"- **Batch Count:** {batchCount}");
-        logBuilder.AppendLine(CultureInfo.InvariantCulture, $"- **Minimum Delay Between Batches:** {minDelayBetweenBatchesMs} ms");
+        logBuilder.AppendLine(CultureInfo.InvariantCulture, $"- **Batch Size:** {BatchSize}");
+        logBuilder.AppendLine(CultureInfo.InvariantCulture, $"- **Batch Count:** {BatchCount}");
+        logBuilder.AppendLine(CultureInfo.InvariantCulture, $"- **Minimum Delay Between Batches:** {MinDelayBetweenBatchesMs} ms");
         logBuilder.AppendLine();
         logBuilder.AppendLine(MarkdownTableHeader());
 
-        for (int i = 0; i < batchCount; i++)
+        for (int i = 0; i < BatchCount; i++)
         {
-            var batch = results.Skip(i * batchSize).Take(batchSize).ToList();
+            var batch = results.Skip(i * BatchSize).Take(BatchSize).ToList();
             var batchAverages = AverageDurations(batch);
             logBuilder.AppendLine(FormatMarkdownRow(i, batchAverages));
         }
@@ -66,11 +119,11 @@ public static class ValidationBenchmarkHelpers
         logBuilder.AppendLine(FormatSummaryRow(averageDurations));
         logBuilder.AppendLine();
 
-        var outputPath = Path.Combine("BenchmarkResults", "test.md");
+        var outputPath = Path.Combine("BenchmarkResults", "test_1.md");
         Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
         if (File.Exists(outputPath))
         {
-            var i = 1;
+            var i = 2;
             string newPath;
             do
             {
@@ -89,8 +142,8 @@ public static class ValidationBenchmarkHelpers
     }
 
     private static string MarkdownTableHeader() =>
-        "| Batch | Schema Inner (ms) | Schema Full (ms) | Schematron Inner (ms) | Schematron Full (ms) | Total (ms) |\n" +
-        "|-------|-------------------|------------------|------------------------|-----------------------|------------|";
+        "| Batch | Schematron Inner (ms) | Total (ms) |\n" +
+        "|-------|-----------------------|------------|";
 
     private static string FormatMarkdownRow(int batchIndex, AverageDurations durations) =>
         $"| {(batchIndex + 1).ToTechnicalString()} | {durations.SchemaInnerMs} | {durations.SchemaTotalMs} " +
@@ -100,14 +153,11 @@ public static class ValidationBenchmarkHelpers
         $"| **AVG** | **{durations.SchemaInnerMs}** | **{durations.SchemaTotalMs}** | **{durations.SchematronInnerMs}** " +
         $"| **{durations.SchematronTotalMs}** | **{durations.TotalMs}** |";
 
-    private static AverageDurations AverageDurations(IList<InvoiceValidationResult> results) =>
+    private static AverageDurations AverageDurations(IList<BenchmarkRunResult> results) =>
         new()
         {
-            SchemaInnerMs = ToAverageString(results.Select(item => item.SchemaValidationResult!.InnerValidationDurationMs)),
-            SchemaTotalMs = ToAverageString(results.Select(item => item.SchemaValidationResult!.ValidationDurationMs)),
-            SchematronInnerMs = ToAverageString(results.Select(item => (long)item.SchematronValidationResult!.InnerValidationDurationMs)),
-            SchematronTotalMs = ToAverageString(results.Select(item => item.SchematronValidationResult!.ValidationDurationMs)),
-            TotalMs = ToAverageString(results.Select(item => item.TotalValidationDurationMs)),
+            SchematronInnerMs = ToAverageString(results.Select(item => (long)item.Result.SchematronValidationResult!.InnerValidationDurationMs)),
+            TotalMs = ToAverageString(results.Select(item => item.ElapsedMilliseconds)),
         };
 
     private static string ToAverageString(IEnumerable<long> numbers) =>

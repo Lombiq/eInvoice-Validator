@@ -1,6 +1,4 @@
-﻿using Lombiq.EInvoiceValidator.Models;
-
-namespace EInvoiceValidator.Benchmark.Models;
+﻿namespace Lombiq.EInvoiceValidator.Benchmark.Models;
 
 public class BenchmarkRunResult
 {

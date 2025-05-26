@@ -1,14 +1,10 @@
-﻿using EInvoiceValidator.Benchmark.Models;
-using Jering.Javascript.NodeJS;
-using Lombiq.EInvoiceValidator.Models;
-using Lombiq.EInvoiceValidator.Services;
-using Microsoft.Extensions.Caching.Memory;
+﻿using Lombiq.EInvoiceValidator.Benchmark.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
-namespace EInvoiceValidator.Benchmark.Helpers;
+namespace Lombiq.EInvoiceValidator.Benchmark.Helpers;
 
 public static class ValidationBenchmarkHelpers
 {

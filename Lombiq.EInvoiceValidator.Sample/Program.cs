@@ -21,7 +21,7 @@ var nodeJsService = serviceProvider.GetRequiredService<INodeJSService>();
 var memoryCache = serviceProvider.GetRequiredService<IMemoryCache>();
 var eInvoiceXmlSchemaSet = serviceProvider.GetRequiredService<IEInvoiceXmlSchemaSet>();
 
-// Step 3. Get the invoices in the SampleInvoices directory.
+// Step 3. Get the example EN 16931 CII and EN 16931 UBL invoices in the SampleInvoices directory.
 var filePaths = Directory.GetFiles(Path.Combine("SampleInvoices"), "*.xml", SearchOption.AllDirectories);
 
 foreach (var filePath in filePaths)

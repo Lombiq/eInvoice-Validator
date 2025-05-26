@@ -146,12 +146,10 @@ public static class ValidationBenchmarkHelpers
         "|-------|-----------------------|------------|";
 
     private static string FormatMarkdownRow(int batchIndex, AverageDurations durations) =>
-        $"| {(batchIndex + 1).ToTechnicalString()} | {durations.SchemaInnerMs} | {durations.SchemaTotalMs} " +
-        $"| {durations.SchematronInnerMs} | {durations.SchematronTotalMs} | {durations.TotalMs} |";
+        $"| {(batchIndex + 1).ToTechnicalString()} | {durations.SchematronInnerMs} | {durations.TotalMs} |";
 
     private static string FormatSummaryRow(AverageDurations durations) =>
-        $"| **AVG** | **{durations.SchemaInnerMs}** | **{durations.SchemaTotalMs}** | **{durations.SchematronInnerMs}** " +
-        $"| **{durations.SchematronTotalMs}** | **{durations.TotalMs}** |";
+        $"| **AVG** | **{durations.SchematronInnerMs}** | **{durations.TotalMs}** |";
 
     private static AverageDurations AverageDurations(IList<BenchmarkRunResult> results) =>
         new()

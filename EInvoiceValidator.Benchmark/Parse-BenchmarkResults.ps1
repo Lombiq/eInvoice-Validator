@@ -32,11 +32,8 @@ Get-ChildItem -Path $benchmarkFolder -Filter *.md | ForEach-Object {
             BatchCount            = $batchCount
             MinDelayBetweenBatches = $minDelay
             Batch                 = [int]$columns[0]
-            SchemaInnerMs         = [double]$columns[1]
-            SchemaFullMs          = [double]$columns[2]
-            SchematronInnerMs     = [double]$columns[3]
-            SchematronFullMs      = [double]$columns[4]
-            TotalMs               = [double]$columns[5]
+            SchematronInnerMs     = [double]$columns[1]
+            TotalMs               = [double]$columns[2]
         }
     }
 }

@@ -41,10 +41,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="node_modules/**/*">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-
     <None Remove="SchemaFiles\CII\*.xsd" />
     <EmbeddedResource Include="SchemaFiles\CII\*.xsd" />
     <None Remove="SchemaFiles\UBL\common\*.xsd" />
@@ -62,10 +58,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
-  <PropertyGroup>
-    <PnpmInstallCommand>pnpm install --shamefully-flatten</PnpmInstallCommand>
-  </PropertyGroup>
 
   <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\..\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
 

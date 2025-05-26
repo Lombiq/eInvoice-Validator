@@ -1,5 +1,5 @@
 ﻿param(
-    [string]$ExecutablePath = "$PSScriptRoot\bin\Release\net8.0\EInvoiceValidator.Benchmark.exe",
+    [string]$ExecutablePath = "dotnet run", # Or "$PSScriptRoot\bin\Release\net8.0\EInvoiceValidator.Benchmark.exe"
     [int]$Runs = 5,
     [int]$DelayBetweenRunsSeconds = 2,
     [string]$LogFolder = ".\BenchmarkRunLogs"

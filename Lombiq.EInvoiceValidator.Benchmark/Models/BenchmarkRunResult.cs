@@ -1,4 +1,6 @@
-﻿namespace Lombiq.EInvoiceValidator.Benchmark.Models;
+﻿using Lombiq.EInvoiceValidator.Models;
+
+namespace Lombiq.EInvoiceValidator.Benchmark.Models;
 
 public class BenchmarkRunResult
 {

@@ -1,4 +1,6 @@
 ﻿using Lombiq.EInvoiceValidator.Benchmark.Helpers;
+using Lombiq.EInvoiceValidator.Extensions;
+using Lombiq.EInvoiceValidator.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
 // Add the services to the DI container.

@@ -7,5 +7,4 @@ public class SchematronValidationResult
     public IList<FailedAssert> WarningFailedAsserts { get; } = [];
     public IList<FailedAssert> ErrorFailedAsserts { get; } = [];
     public int InnerValidationDurationMs { get; set; }
-    public long ValidationDurationMs { get; set; }
 }

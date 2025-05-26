@@ -15,18 +15,12 @@ public static class SchemaValidationHelper
         InvoiceFormat format)
     {
         var result = new SchemaValidationResult();
-        var (innerValidationDurationMs, elapsedMs) = await TimingHelpers.MeasureTimeAsync(async () =>
-        {
-            var xmlSchemaSet = eInvoiceXmlSchemaSet.GetSchemaSet(format);
-            var xmlReaderSettings = CreateReaderSettings(xmlSchemaSet, ValidationEventHandler(result));
+        var xmlSchemaSet = eInvoiceXmlSchemaSet.GetSchemaSet(format);
+        var xmlReaderSettings = CreateReaderSettings(xmlSchemaSet, ValidationEventHandler(result));
 
-            using var stringReader = new StringReader(xml);
-            using var xmlReader = XmlReader.Create(stringReader, xmlReaderSettings);
-            return await ValidateWithReaderAsync(xmlReader);
-        });
-
-        result.ValidationDurationMs = elapsedMs;
-        result.InnerValidationDurationMs = innerValidationDurationMs;
+        using var stringReader = new StringReader(xml);
+        using var xmlReader = XmlReader.Create(stringReader, xmlReaderSettings);
+        await ValidateWithReaderAsync(xmlReader);
 
         return result;
     }
@@ -38,21 +32,13 @@ public static class SchemaValidationHelper
     {
         var result = new SchemaValidationResult();
 
-        var (innerValidationDurationMs, elapsedMs) = await TimingHelpers.MeasureTimeAsync(async () =>
-        {
-            if (xmlStream.CanSeek) xmlStream.Position = 0;
+        if (xmlStream.CanSeek) xmlStream.Position = 0;
 
-            var xmlSchemaSet = eInvoiceXmlSchemaSet.GetSchemaSet(format);
-            var xmlReaderSettings = CreateReaderSettings(xmlSchemaSet, ValidationEventHandler(result));
+        var xmlSchemaSet = eInvoiceXmlSchemaSet.GetSchemaSet(format);
+        var xmlReaderSettings = CreateReaderSettings(xmlSchemaSet, ValidationEventHandler(result));
 
-            using var xmlReader = XmlReader.Create(xmlStream, xmlReaderSettings);
-            var innerValidationDurationMs = await ValidateWithReaderAsync(xmlReader);
-
-            return innerValidationDurationMs;
-        });
-
-        result.ValidationDurationMs = elapsedMs;
-        result.InnerValidationDurationMs = innerValidationDurationMs;
+        using var xmlReader = XmlReader.Create(xmlStream, xmlReaderSettings);
+        await ValidateWithReaderAsync(xmlReader);
 
         return result;
     }
@@ -78,12 +64,11 @@ public static class SchemaValidationHelper
         return settings;
     }
 
-    private static Task<long> ValidateWithReaderAsync(XmlReader reader) =>
-    TimingHelpers.MeasureTimeAsync(async () =>
+    private static async Task ValidateWithReaderAsync(XmlReader reader)
     {
         while (await reader.ReadAsync())
         {
             // Trigger validation passively while going through the XML.
         }
-    });
+    }
 }

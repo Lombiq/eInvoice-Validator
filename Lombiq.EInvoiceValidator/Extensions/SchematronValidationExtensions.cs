@@ -29,48 +29,41 @@ public static class SchematronValidationExtensions
         InvoiceFormat format,
         CancellationToken cancellationToken = default)
     {
-        var (schematronValidationResult, elapsedMs) = await TimingHelpers.MeasureTimeAsync(async () =>
+        var resourceName = format switch
         {
-            var resourceName = format switch
+            InvoiceFormat.CII => CiiSefJson,
+            InvoiceFormat.UBL => UblSefJson,
+            _ => throw new NotSupportedException("Unsupported format"),
+        };
+
+        var convertedSchematronFilePath = ResourceHelper.ExtractResourceToTempFile(
+            memoryCache,
+            resourceName,
+            format == InvoiceFormat.CII ? En16931CiiValidationSefJson : En16931UblValidationSefJson);
+
+        var result = await nodeJsService.InvokeFromFileAsync<ScriptValidationResult>(
+            ValidatorJs,
+            ExportName,
+            [convertedSchematronFilePath, xmlFileToValidate],
+            cancellationToken);
+
+        if (result.Error != null)
+        {
+            throw new InvalidOperationException("An unexpected fatal error happened.");
+        }
+
+        var schematronValidationResult = new SchematronValidationResult { InnerValidationDurationMs = result.DurationMs };
+
+        using var reader = XmlReader.Create(new StringReader(result.OutputXml), new XmlReaderSettings { Async = true });
+        while (await reader.ReadAsync())
+        {
+            if (IsElement(reader, FailedAssert))
             {
-                InvoiceFormat.CII => CiiSefJson,
-                InvoiceFormat.UBL => UblSefJson,
-                _ => throw new NotSupportedException("Unsupported format"),
-            };
-
-            var convertedSchematronFilePath = ResourceHelper.ExtractResourceToTempFile(
-                memoryCache,
-                resourceName,
-                format == InvoiceFormat.CII ? En16931CiiValidationSefJson : En16931UblValidationSefJson);
-
-            var result = await nodeJsService.InvokeFromFileAsync<ScriptValidationResult>(
-                ValidatorJs,
-                ExportName,
-                [convertedSchematronFilePath, xmlFileToValidate],
-                cancellationToken);
-
-            if (result.Error != null)
-            {
-                throw new InvalidOperationException("An unexpected fatal error happened.");
+                var failedAssert = ReadFailedAssert(reader);
+                (failedAssert.IsError ? schematronValidationResult.ErrorFailedAsserts : schematronValidationResult.WarningFailedAsserts)
+                    .Add(failedAssert);
             }
-
-            var schematronValidationResult = new SchematronValidationResult { InnerValidationDurationMs = result.DurationMs };
-
-            using var reader = XmlReader.Create(new StringReader(result.OutputXml), new XmlReaderSettings { Async = true });
-            while (await reader.ReadAsync())
-            {
-                if (IsElement(reader, FailedAssert))
-                {
-                    var failedAssert = ReadFailedAssert(reader);
-                    (failedAssert.IsError ? schematronValidationResult.ErrorFailedAsserts : schematronValidationResult.WarningFailedAsserts)
-                        .Add(failedAssert);
-                }
-            }
-
-            return schematronValidationResult;
-        });
-
-        schematronValidationResult.ValidationDurationMs = elapsedMs;
+        }
 
         return schematronValidationResult;
     }

@@ -53,9 +53,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="validator.js" />
     <Content Include="validator.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>true</Pack>
+      <PackagePath>contentFiles\any\any</PackagePath>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
     </Content>
   </ItemGroup>
 

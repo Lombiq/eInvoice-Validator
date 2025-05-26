@@ -38,6 +38,7 @@ foreach (var filePath in filePaths)
         continue;
     }
 
+    // The files with failing in their name are expected to be invalid.
     Console.WriteLine($"The invoice in {filePath} is invalid.");
     LogValidationErrors(result.SchematronValidationResult?.ErrorFailedAsserts);
     LogValidationErrors(result.SchematronValidationResult?.WarningFailedAsserts);

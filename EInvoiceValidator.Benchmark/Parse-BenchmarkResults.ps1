@@ -1,15 +1,15 @@
-﻿# Path to the folder containing your .md benchmark result files
-$benchmarkFolder = "$PSScriptRoot\BenchmarkResults"  # or specify a path like "C:\Benchmarks"
+﻿# Path to the folder containing your .md benchmark result files.
+$benchmarkFolder = "$PSScriptRoot\BenchmarkResults"
 
-# List to collect parsed benchmark results
+# List to collect parsed benchmark results.
 $results = @()
 
-# Get all .md files
+# Get all .md files.
 Get-ChildItem -Path $benchmarkFolder -Filter *.md | ForEach-Object {
     $file = $_
     $content = Get-Content $file.FullName
 
-    # Extract metadata
+    # Extract metadata.
     $timestamp = ($content | Where-Object { $_ -match '\*\*Run Timestamp:\*\*' }) -replace '.*\*\*Run Timestamp:\*\* ', ''
 
     $batchSizeLine = $content | Where-Object { $_ -match '\*\*Batch Size:\*\*' }
@@ -20,7 +20,7 @@ Get-ChildItem -Path $benchmarkFolder -Filter *.md | ForEach-Object {
 
     $minDelay = ($content | Where-Object { $_ -match '\*\*Minimum Delay Between Batches:\*\*' }) -replace '.*\*\*Minimum Delay Between Batches:\*\* ', ''
 
-    # Get only rows that look like actual batch results (start with | <number>)
+    # Get only rows that look like actual batch results (start with | <number>).
     $batchLines = $content | Where-Object { $_ -match '^\|\s*\d+\s*\|' }
 
     foreach ($line in $batchLines) {
@@ -41,8 +41,8 @@ Get-ChildItem -Path $benchmarkFolder -Filter *.md | ForEach-Object {
     }
 }
 
-# Output all results to console
+# Output all results to console.
 $results | Format-Table -AutoSize
 
-# Export to CSV
+# Export to CSV.
 $results | Export-Csv -Path "$benchmarkFolder\BenchmarkResults.csv" -NoTypeInformation

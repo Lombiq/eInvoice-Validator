@@ -5,7 +5,7 @@
     [string]$LogFolder = ".\BenchmarkRunLogs"
 )
 
-# Ensure output folder exists
+# Ensure output folder exists.
 $timestampFolder = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 $runOutputPath = Join-Path -Path $LogFolder -ChildPath $timestampFolder
 New-Item -ItemType Directory -Path $runOutputPath -Force | Out-Null
@@ -18,10 +18,10 @@ for ($i = 1; $i -le $Runs; $i++) {
 
     Write-Host "▶️ Run $i at $runTime"
 
-    # Run the benchmark and capture output
+    # Run the benchmark and capture output.
     & $ExecutablePath | Tee-Object -FilePath $logFile
 
-    # Optional delay between runs
+    # Optional delay between runs.
     if ($i -lt $Runs -and $DelayBetweenRunsSeconds -gt 0) {
         Write-Host "⏳ Waiting $DelayBetweenRunsSeconds seconds before next run..."
         Start-Sleep -Seconds $DelayBetweenRunsSeconds
@@ -30,5 +30,5 @@ for ($i = 1; $i -le $Runs; $i++) {
 
 Write-Host "`n✅ All $Runs runs completed. Logs saved to: $runOutputPath"
 
-# Run Parse-BenchmarkResults.ps1 to parse the results
+# Run Parse-BenchmarkResults.ps1 to parse the results.
 & "$PSScriptRoot\Parse-BenchmarkResults.ps1"

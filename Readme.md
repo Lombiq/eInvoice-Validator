@@ -20,6 +20,7 @@ Check out our sample project to see it in action: [Lombiq.EInvoiceValidator.Samp
 
 1. Add the NuGet package to your project or use it as a submodule in your solution.
 2. Perform full validation (schema + schematron)
+
     ```csharp
     var validationResult = await InvoiceValidationHelper.ValidateInvoiceAsync(
         xmlString,
@@ -92,6 +93,7 @@ if (schematronResult.WarningFailedAsserts.Any())
 ```
 
 ### InvoiceFormatHelper
+
 The `InvoiceFormatHelper` class is used to detect the format of an e-invoice XML (either UBL or CII). It provides async methods to analyze either a string or a stream containing XML and returns the detected `InvoiceFormat` enum value.
 
 ```csharp

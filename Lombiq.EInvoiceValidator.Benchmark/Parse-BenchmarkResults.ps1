@@ -6,34 +6,35 @@ $results = @()
 
 # Get all .md files.
 Get-ChildItem -Path $benchmarkFolder -Filter *.md | ForEach-Object {
-    $file = $_
+    $file = $PSItem
     $content = Get-Content $file.FullName
 
     # Extract metadata.
-    $timestamp = ($content | Where-Object { $_ -match '\*\*Run Timestamp:\*\*' }) -replace '.*\*\*Run Timestamp:\*\* ', ''
+    $timestamp = ($content | Where-Object { $PSItem -match '\*\*Run Timestamp:\*\*' }) -replace '.*\*\*Run Timestamp:\*\* ', ''
 
-    $batchSizeLine = $content | Where-Object { $_ -match '\*\*Batch Size:\*\*' }
+    $batchSizeLine = $content | Where-Object { $PSItem -match '\*\*Batch Size:\*\*' }
     $batchSize = [int]($batchSizeLine -replace '.*\*\*Batch Size:\*\* ', '')
 
-    $batchCountLine = $content | Where-Object { $_ -match '\*\*Batch Count:\*\*' }
+    $batchCountLine = $content | Where-Object { $PSItem -match '\*\*Batch Count:\*\*' }
     $batchCount = [int]($batchCountLine -replace '.*\*\*Batch Count:\*\* ', '')
 
-    $minDelay = ($content | Where-Object { $_ -match '\*\*Minimum Delay Between Batches:\*\*' }) -replace '.*\*\*Minimum Delay Between Batches:\*\* ', ''
+    $minDelay = ($content | Where-Object { $PSItem -match '\*\*Minimum Delay Between Batches:\*\*' }) -replace '.*\*\*Minimum Delay Between Batches:\*\* ', ''
 
     # Get only rows that look like actual batch results (start with | <number>).
-    $batchLines = $content | Where-Object { $_ -match '^\|\s*\d+\s*\|' }
+    $batchLines = $content | Where-Object { $PSItem -match '^\|\s*\d+\s*\|' }
 
-    foreach ($line in $batchLines) {
-        $columns = $line -split '\|\s*' | Where-Object { $_ -ne '' }
+    foreach ($line in $batchLines)
+    {
+        $columns = $line -split '\|\s*' | Where-Object { $PSItem -ne '' }
         $results += [PSCustomObject]@{
-            File                  = $file.Name
-            Timestamp             = $timestamp
-            BatchSize             = $batchSize
-            BatchCount            = $batchCount
+            File = $file.Name
+            Timestamp = $timestamp
+            BatchSize = $batchSize
+            BatchCount = $batchCount
             MinDelayBetweenBatches = $minDelay
-            Batch                 = [int]$columns[0]
-            SchematronInnerMs     = [double]$columns[1]
-            TotalMs               = [double]$columns[2]
+            Batch = [int]$columns[0]
+            SchematronInnerMs = [double]$columns[1]
+            TotalMs = [double]$columns[2]
         }
     }
 }

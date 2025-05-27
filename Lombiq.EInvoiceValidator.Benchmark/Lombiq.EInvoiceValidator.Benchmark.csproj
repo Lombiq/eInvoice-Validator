@@ -21,6 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="BenchmarkResults\" />
+    <Folder Include="BenchmarkRunLogs\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="SampleInvoices\**\*.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

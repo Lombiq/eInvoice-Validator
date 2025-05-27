@@ -11,7 +11,8 @@ New-Item -ItemType Directory -Path $runOutputPath -Force | Out-Null
 
 Write-Output "`n Starting $Runs benchmark runs..."
 
-for ($i = 1; $i -le $Runs; $i++) {
+for ($i = 1; $i -le $Runs; $i++)
+{
     $runTime = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
     $logFile = Join-Path -Path $runOutputPath -ChildPath "run_$i.log"
 
@@ -21,7 +22,8 @@ for ($i = 1; $i -le $Runs; $i++) {
     dotnet run | Tee-Object -FilePath $logFile
 
     # Optional delay between runs.
-    if ($i -lt $Runs -and $DelayBetweenRunsSeconds -gt 0) {
+    if ($i -lt $Runs -and $DelayBetweenRunsSeconds -gt 0)
+    {
         Write-Output "⏳ Waiting $DelayBetweenRunsSeconds seconds before next run..."
         Start-Sleep -Seconds $DelayBetweenRunsSeconds
     }

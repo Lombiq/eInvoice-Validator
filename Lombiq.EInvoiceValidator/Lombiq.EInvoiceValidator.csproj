@@ -61,6 +61,21 @@
     </Content>
   </ItemGroup>
 
+  <Target Name="AddNodeModules" AfterTargets="NpmDotnetPrebuild">
+    <ItemGroup>
+      <Content Include="node_modules\**\*">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Pack>true</Pack>
+        <PackagePath>contentFiles\any\any\node_modules</PackagePath>
+        <PackageCopyToOutput>true</PackageCopyToOutput>
+      </Content>
+    </ItemGroup>
+  </Target>
+
+  <PropertyGroup>
+    <PnpmInstallCommand>pnpm install --shamefully-hoist</PnpmInstallCommand>
+  </PropertyGroup>
+
   <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\..\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
 
 </Project>

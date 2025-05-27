@@ -1,7 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\..\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
@@ -11,8 +8,16 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Condition="Exists('..\Lombiq.EInvoiceValidator\Lombiq.EInvoiceValidator.csproj')" Include="..\Lombiq.EInvoiceValidator\Lombiq.EInvoiceValidator.csproj" />
+  <PropertyGroup>
+    <EInvoiceValidator>..\Lombiq.EInvoiceValidator\Lombiq.EInvoiceValidator.csproj</EInvoiceValidator>
+  </PropertyGroup>
+
+  <ItemGroup Condition="!Exists($(EInvoiceValidator))">
+    <PackageReference Include="Lombiq.EInvoiceValidator" Version="1.0.0"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists($(EInvoiceValidator))">
+    <ProjectReference Include="..\Lombiq.EInvoiceValidator\Lombiq.EInvoiceValidator.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,11 +25,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="BenchmarkResults\" />
-    <Folder Include="BenchmarkRunLogs\" />
-  </ItemGroup>
-
-  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\..\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
 </Project>

@@ -1,7 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\..\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <OutputType>Exe</OutputType>
@@ -16,15 +13,25 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-  
+
   <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
-    <PackageReference Include="Lombiq.Npm.Targets" Version="1.5.0"/>
     <PackageReference Include="Lombiq.Tests" Version="5.0.0"/>
     <PackageReference Include="Lombiq.EInvoiceValidator" Version="1.0.0"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\test\Lombiq.Tests\Lombiq.Tests.csproj" />
+    <ProjectReference Condition="'$(NuGetBuild)' != 'true'" Include="..\..\..\..\test\Lombiq.Tests\Lombiq.Tests.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <EInvoiceValidator>..\Lombiq.EInvoiceValidator\Lombiq.EInvoiceValidator.csproj</EInvoiceValidator>
+  </PropertyGroup>
+
+  <ItemGroup Condition="!Exists($(EInvoiceValidator))">
+    <PackageReference Include="Lombiq.EInvoiceValidator" Version="1.0.0"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists($(EInvoiceValidator))">
     <ProjectReference Include="..\Lombiq.EInvoiceValidator\Lombiq.EInvoiceValidator.csproj" />
   </ItemGroup>
 
@@ -33,6 +40,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\..\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
 </Project>

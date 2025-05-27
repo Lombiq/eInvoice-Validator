@@ -27,7 +27,7 @@ public static class ValidationBenchmarkHelpers
         IServiceProvider serviceProvider,
         Func<Stream, INodeJSService, IMemoryCache, IEInvoiceXmlSchemaSet, Task<InvoiceValidationResult>> action)
     {
-        // Warmup run before benchmark.
+        // Warm-up run before benchmark.
         if (DoWarmup)
         {
             Console.WriteLine($"Warming up by running {BatchSize} validations...");

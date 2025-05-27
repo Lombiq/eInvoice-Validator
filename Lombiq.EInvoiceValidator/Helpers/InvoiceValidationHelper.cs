@@ -1,10 +1,10 @@
 ﻿using Jering.Javascript.NodeJS;
-using Lombiq.EInvoiceValidator.Extensions;
 using Lombiq.EInvoiceValidator.Models;
 using Lombiq.EInvoiceValidator.Services;
 using Microsoft.Extensions.Caching.Memory;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Lombiq.EInvoiceValidator.Helpers;
@@ -16,15 +16,26 @@ public static class InvoiceValidationHelper
         INodeJSService nodeJsService,
         IMemoryCache memoryCache,
         IEInvoiceXmlSchemaSet eInvoiceXmlSchemaSet,
-        bool stopOnSchemaError = false)
+        bool stopOnSchemaError = false,
+        CancellationToken cancellationToken = default)
     {
-        var result = await InvoiceValidationResultAsync(xml, nodeJsService, memoryCache, eInvoiceXmlSchemaSet, stopOnSchemaError);
+        var invoiceFormat = await InvoiceFormatHelper.DetectFormatAsync(xml);
+        var schema = await SchemaValidationHelper.ValidateXmlAgainstSchemaAsync(xml, invoiceFormat, eInvoiceXmlSchemaSet);
+        if (stopOnSchemaError && schema.ErrorMessages.Any())
+        {
+            return new InvoiceValidationResult(schema, SchematronValidationResult: null, invoiceFormat);
+        }
 
-        var successful = result.SchemaValidationResult?.ErrorMessages.Count == 0 &&
-                         result.SchematronValidationResult?.ErrorFailedAsserts.Count == 0;
-        var hasWarnings = result.SchematronValidationResult?.WarningFailedAsserts.Count > 0;
+        var schematron = await SchematronValidationHelper.ExecuteSchematronValidationAsync(
+            xml,
+            invoiceFormat,
+            nodeJsService,
+            memoryCache,
+            cancellationToken);
 
-        return result with { Successful = successful, HasWarnings = hasWarnings };
+        var (failed, hasWarnings) = DetermineValidationStatus(schema, schematron);
+
+        return new InvoiceValidationResult(schema, schematron, invoiceFormat, Successful: !failed, HasWarnings: hasWarnings);
     }
 
     public static async Task<InvoiceValidationResult> ValidateInvoiceAsync(
@@ -32,8 +43,8 @@ public static class InvoiceValidationHelper
         INodeJSService nodeJsService,
         IMemoryCache memoryCache,
         IEInvoiceXmlSchemaSet eInvoiceXmlSchemaSet,
-        bool skipSchemaValidation = false,
-        bool stopOnSchemaError = false)
+        bool stopOnSchemaError = false,
+        CancellationToken cancellationToken = default)
     {
         Stream reusableStream;
         if (xmlStream.CanSeek)
@@ -44,54 +55,43 @@ public static class InvoiceValidationHelper
         else
         {
             var memoryStream = new MemoryStream();
-            await xmlStream.CopyToAsync(memoryStream);
+            await xmlStream.CopyToAsync(memoryStream, cancellationToken);
             memoryStream.Position = 0;
             reusableStream = memoryStream;
         }
 
         var invoiceFormat = await InvoiceFormatHelper.DetectFormatAsync(reusableStream);
 
-        SchemaValidationResult schema = null;
-        if (!skipSchemaValidation)
-        {
-            // Reset again before passing to schema validation
-            reusableStream.Position = 0;
+        ResetStreamPosition(reusableStream);
 
-            schema = await SchemaValidationHelper.ValidateXmlAgainstSchemaAsync(eInvoiceXmlSchemaSet, reusableStream, invoiceFormat);
-            if (stopOnSchemaError && schema.ErrorMessages.Any())
-            {
-                return new InvoiceValidationResult(schema, SchematronValidationResult: null);
-            }
-        }
-
-        // Reset again before passing to schematron validation
-        reusableStream.Position = 0;
-        using var reader = new StreamReader(xmlStream);
-        var xmlText = await reader.ReadToEndAsync();
-        var schematron = await nodeJsService.ExecuteSchematronValidationAsync(memoryCache, xmlText, invoiceFormat);
-
-        // Check if there were any errors in the schema or schematron validation.
-        var failed = (schema != null && schema.ErrorMessages.Any()) || schematron.ErrorFailedAsserts.Count > 0;
-
-        return new InvoiceValidationResult(schema, schematron, !failed);
-    }
-
-    private static async Task<InvoiceValidationResult> InvoiceValidationResultAsync(
-        string xml,
-        INodeJSService nodeJsService,
-        IMemoryCache memoryCache,
-        IEInvoiceXmlSchemaSet eInvoiceXmlSchemaSet,
-        bool stopOnSchemaError)
-    {
-        var invoiceFormat = await InvoiceFormatHelper.DetectFormatAsync(xml);
-        var schema = await SchemaValidationHelper.ValidateXmlAgainstSchemaAsync(eInvoiceXmlSchemaSet, xml, invoiceFormat);
+        var schema = await SchemaValidationHelper.ValidateXmlAgainstSchemaAsync(reusableStream, invoiceFormat, eInvoiceXmlSchemaSet);
         if (stopOnSchemaError && schema.ErrorMessages.Any())
         {
-            return new InvoiceValidationResult(schema, SchematronValidationResult: null);
+            return new InvoiceValidationResult(schema, SchematronValidationResult: null, invoiceFormat);
         }
 
-        var schematron = await nodeJsService.ExecuteSchematronValidationAsync(memoryCache, xml, invoiceFormat);
+        ResetStreamPosition(reusableStream);
 
-        return new InvoiceValidationResult(schema, schematron);
+        using var reader = new StreamReader(xmlStream);
+        var xmlText = await reader.ReadToEndAsync(cancellationToken);
+        var schematron = await SchematronValidationHelper.ExecuteSchematronValidationAsync(
+            xmlText,
+            invoiceFormat,
+            nodeJsService,
+            memoryCache,
+            cancellationToken);
+
+        var (failed, hasWarnings) = DetermineValidationStatus(schema, schematron);
+
+        return new InvoiceValidationResult(schema, schematron, invoiceFormat, Successful: !failed, HasWarnings: hasWarnings);
     }
+
+    private static (bool Failed, bool HasWarnings) DetermineValidationStatus(SchemaValidationResult schema, SchematronValidationResult schematron)
+    {
+        var failed = (schema != null && schema.ErrorMessages.Any()) || schematron.ErrorFailedAsserts.Count > 0;
+        var hasWarnings = schematron?.WarningFailedAsserts.Count > 0;
+        return (failed, hasWarnings);
+    }
+
+    private static void ResetStreamPosition(Stream reusableStream) => reusableStream.Position = 0;
 }

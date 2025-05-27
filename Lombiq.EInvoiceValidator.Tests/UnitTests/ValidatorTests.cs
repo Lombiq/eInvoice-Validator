@@ -33,7 +33,8 @@ public class ValidatorTests
                 streamReaderInner.BaseStream,
                 nodeJsService,
                 memoryCache,
-                eInvoiceXmlSchemaSet);
+                eInvoiceXmlSchemaSet,
+                cancellationToken: TestContext.Current.CancellationToken);
 
             if (filePath.Contains("failing"))
             {

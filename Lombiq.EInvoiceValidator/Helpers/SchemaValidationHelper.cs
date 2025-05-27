@@ -10,9 +10,9 @@ namespace Lombiq.EInvoiceValidator.Helpers;
 public static class SchemaValidationHelper
 {
     public static async Task<SchemaValidationResult> ValidateXmlAgainstSchemaAsync(
-        IEInvoiceXmlSchemaSet eInvoiceXmlSchemaSet,
         string xml,
-        InvoiceFormat format)
+        InvoiceFormat format,
+        IEInvoiceXmlSchemaSet eInvoiceXmlSchemaSet)
     {
         var result = new SchemaValidationResult();
         var xmlSchemaSet = eInvoiceXmlSchemaSet.GetSchemaSet(format);
@@ -26,9 +26,9 @@ public static class SchemaValidationHelper
     }
 
     public static async Task<SchemaValidationResult> ValidateXmlAgainstSchemaAsync(
-        IEInvoiceXmlSchemaSet eInvoiceXmlSchemaSet,
         Stream xmlStream,
-        InvoiceFormat format)
+        InvoiceFormat format,
+        IEInvoiceXmlSchemaSet eInvoiceXmlSchemaSet)
     {
         var result = new SchemaValidationResult();
 

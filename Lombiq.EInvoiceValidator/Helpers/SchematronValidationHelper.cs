@@ -1,5 +1,4 @@
 ﻿using Jering.Javascript.NodeJS;
-using Lombiq.EInvoiceValidator.Helpers;
 using Lombiq.EInvoiceValidator.Models;
 using Microsoft.Extensions.Caching.Memory;
 using System;
@@ -8,9 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Lombiq.EInvoiceValidator.Extensions;
+namespace Lombiq.EInvoiceValidator.Helpers;
 
-public static class SchematronValidationExtensions
+public static class SchematronValidationHelper
 {
     private const string CiiSefJson = "Lombiq.EInvoiceValidator.JsonStylesheets.EN16931-CII-validation.sef.json";
     private const string UblSefJson = "Lombiq.EInvoiceValidator.JsonStylesheets.EN16931-UBL-validation.sef.json";
@@ -21,12 +20,16 @@ public static class SchematronValidationExtensions
     private const string FailedAssert = "failed-assert";
     private const string HttpPurlOclcOrgDsdlSvrl = "http://purl.oclc.org/dsdl/svrl";
 
-    /// <inheritdoc cref="INodeJSService.InvokeFromFileAsync{T}"/>
+    /// <summary>
+    /// Executes the Schematron validation for the given XML using the specified format.
+    /// </summary>
+    /// <exception cref="NotSupportedException">Thrown when the <see cref="InvoiceFormat"/> is <see cref="InvoiceFormat.Unknown"/>.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the schematron validator SaxonJs returns with an exception.</exception>
     public static async Task<SchematronValidationResult> ExecuteSchematronValidationAsync(
-        this INodeJSService nodeJsService,
-        IMemoryCache memoryCache,
-        string xmlFileToValidate,
+        string xml,
         InvoiceFormat format,
+        INodeJSService nodeJsService,
+        IMemoryCache memoryCache,
         CancellationToken cancellationToken = default)
     {
         var resourceName = format switch
@@ -44,12 +47,12 @@ public static class SchematronValidationExtensions
         var result = await nodeJsService.InvokeFromFileAsync<ScriptValidationResult>(
             ValidatorJs,
             ExportName,
-            [convertedSchematronFilePath, xmlFileToValidate],
+            [convertedSchematronFilePath, xml],
             cancellationToken);
 
         if (result.Error != null)
         {
-            throw new InvalidOperationException("An unexpected fatal error happened.");
+            throw new InvalidOperationException($"An unexpected fatal error happened: {result.Error}");
         }
 
         var schematronValidationResult = new SchematronValidationResult { InnerValidationDurationMs = result.DurationMs };

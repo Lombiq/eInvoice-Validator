@@ -1,16 +1,119 @@
-# Lombiq <add project name here>
+# Lombiq eInvoice Validator
 
 ## About
 
 .NET library to validate EU eInvoices that follow the EN 16931 standard.
 
-Add a general overview of the project here. Keep or remove the OSOCE note below as necessary.
+Uses [CEN/TC 434 - EN-16931 - Validation artefacts](https://github.com/ConnectingEurope/eInvoicing-EN16931) v1.3.14.1 release validation files for schema (xsd) and schematron (xslt) validation. Currently, ubl - UBL 2.1 (ISO/IEC 19845:2015) and cii - Cross Industry Invoice (D16B) eInvoicing formats are supported.
 
 Do you want to quickly try out this project and see it in action? Check it out in our [Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions) full Orchard Core solution and also see our other useful Orchard Core-related open-source projects!
 
-## Documentation
+## Prerequisites
 
-Add detailed documentation here. If it's a lot of content then create documentation pages under the *Docs* folder and link pages here.
+- Node.js
+
+## Getting Started
+
+Check out our sample project to see it in action: [Lombiq.EInvoiceValidator.Sample](./Lombiq.EInvoiceValidator.Sample/Program.cs).
+
+1. Add the NuGet package to your project or use it as a submodule in your solution.
+2. Perform full validation (schema + schematron)
+    ```csharp
+    var validationResult = await InvoiceValidationHelper.ValidateInvoiceAsync(
+        xmlString,
+        nodeJsService,
+        memoryCache,
+        eInvoiceXmlSchemaSet);
+    
+    if (validationResult.Successful)
+    {
+        // Invoice is valid.
+    }
+    
+    if (validationResult.HasWarnings)
+    {
+        // Handle warnings.
+    }
+    else
+    {
+        // Access validationResult.SchemaValidationResult and validationResult.SchematronValidationResult for details.
+    }
+    ```
+
+## Validation Helpers
+
+### SchemaValidationHelper
+
+Validate an XML invoice against the XSD schema only:
+
+```csharp
+// For string XML.
+var schemaResult = await SchemaValidationHelper.ValidateXmlAgainstSchemaAsync(
+    xmlString,
+    InvoiceFormat.CII,
+    eInvoiceXmlSchemaSet);
+
+// Or using stream.
+var schemaResult = await SchemaValidationHelper.ValidateXmlAgainstSchemaAsync(
+    xmlStream,
+    InvoiceFormat.CII,
+    eInvoiceXmlSchemaSet);
+
+if (schemaResult.ErrorMessages.Any())
+{
+    // Handle schema validation errors.
+}
+```
+
+### SchematronValidationHelper
+
+Validate business rules using schematron only:
+
+```csharp
+using Lombiq.EInvoiceValidator.Helpers;
+
+var schematronResult = await SchematronValidationHelper.ExecuteSchematronValidationAsync(
+    xmlString,
+    InvoiceFormat.Ubl,
+    nodeJsService,
+    memoryCache);
+
+if (schematronResult.ErrorFailedAsserts.Any())
+{
+    // Handle schematron errors.
+}
+
+if (schematronResult.WarningFailedAsserts.Any())
+{
+    // Handle schematron warnings.
+}
+```
+
+### InvoiceFormatHelper
+The `InvoiceFormatHelper` class is used to detect the format of an e-invoice XML (either UBL or CII). It provides async methods to analyze either a string or a stream containing XML and returns the detected `InvoiceFormat` enum value.
+
+```csharp
+// For XML string.
+var format = await InvoiceFormatHelper.DetectFormatAsync(xmlString);
+
+// For XML stream.
+var format = await InvoiceFormatHelper.DetectFormatAsync(xmlStream);
+
+if (format == InvoiceFormat.UBL)
+{
+    // Handle UBL invoice.
+}
+else if (format == InvoiceFormat.CII)
+{
+    // Handle CII invoice.
+}
+else
+{
+    // Unknown or unsupported format.
+}
+```
+
+This helper is typically used before validation to determine which schema and schematron to apply.
 
 ## Contributing and support
 

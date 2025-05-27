@@ -1,5 +1,7 @@
 # Lombiq eInvoice Validator
 
+[![Lombiq EInvoiceValidator NuGet](https://img.shields.io/nuget/v/Lombiq.EInvoiceValidator?label=Lombiq.EInvoiceValidator)](https://www.nuget.org/packages/Lombiq.EInvoiceValidator/)
+
 ## About
 
 .NET library to validate EU eInvoices that follow the EN 16931 standard.

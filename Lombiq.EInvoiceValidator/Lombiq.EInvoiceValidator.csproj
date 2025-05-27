@@ -12,7 +12,7 @@
     <Authors>Lombiq Technologies</Authors>
     <Copyright>Copyright © 2025, Lombiq Technologies Ltd.</Copyright>
     <Description>Lombiq eInvoice Validator: Adds validation for EU eInvoices that follow the EN 16931 standard. See the project website for detailed documentation.</Description>
-    <PackageTags>OrchardCore;Lombiq;AspNetCore;EN16931;eInvoice;XML;</PackageTags>
+    <PackageTags>OrchardCore;Lombiq;AspNetCore;EN16931;eInvoice;XML;UBL;CII</PackageTags>
     <PackageIcon>NuGetIcon.png</PackageIcon>
     <RepositoryUrl>https://github.com/Lombiq/eInvoice-Validator</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Lombiq/eInvoice-Validator</PackageProjectUrl>
@@ -20,11 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="../Readme.md" />
     <None Include="NuGetIcon.png" Pack="true" PackagePath="" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\Readme.md" Link="Readme.md" />
   </ItemGroup>
 
   <ItemGroup>

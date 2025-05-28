@@ -91,11 +91,6 @@ public static class ValidationBenchmarkHelpers
         var result = await action(streamReaderInner.BaseStream, nodeJsService, memoryCache, eInvoiceXmlSchemaSet);
         stopwatch.Stop();
 
-        if (result.SchematronValidationResult!.ErrorFailedAsserts.Count > 0)
-        {
-            Console.WriteLine($"Errors in {filePath}:");
-        }
-
         return new BenchmarkRunResult { Result = result, ElapsedMilliseconds = stopwatch.ElapsedMilliseconds };
     }
 

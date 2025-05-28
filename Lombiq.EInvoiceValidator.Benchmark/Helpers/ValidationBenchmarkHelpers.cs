@@ -64,7 +64,10 @@ public static class ValidationBenchmarkHelpers
         Func<Stream, INodeJSService, IMemoryCache, IEInvoiceXmlSchemaSet, Task<InvoiceValidationResult>> action,
         int batchIndex)
     {
-        var filePaths = Directory.GetFiles(Path.Combine("SampleInvoices"), "*.xml", SearchOption.AllDirectories);
+        var filePaths = Directory.GetFiles(
+            Path.Combine("..", "Lombiq.EInvoiceValidator.Sample", "SampleInvoices"),
+            "*.xml",
+            SearchOption.AllDirectories);
         var filesInBatch = Enumerable
             .Range(0, BatchSize)
             .Select(i => filePaths[((batchIndex * BatchSize) + i) % filePaths.Length])

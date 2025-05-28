@@ -10,7 +10,7 @@ Uses [CEN/TC 434 - EN-16931 - Validation artifacts](https://github.com/Connectin
 
 Do you want to quickly try out this project and see it in action? Check it out in our [Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions) full Orchard Core solution and also see our other useful Orchard Core-related open-source projects!
 
-We have a benchmark project to measure the performance of the validation process. You can find it here: [Lombiq.EInvoiceValidator.Benchmark](./Lombiq.EInvoiceValidator.Benchmark/Readme.md).
+We have a benchmark project to measure the performance of the validation process. You can find it here: [`Lombiq.EInvoiceValidator.Benchmark`](./Lombiq.EInvoiceValidator.Benchmark/Readme.md).
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ We have a benchmark project to measure the performance of the validation process
 
 ## Getting Started
 
-Check out our sample project to see it in action: [Lombiq.EInvoiceValidator.Sample](./Lombiq.EInvoiceValidator.Sample/Program.cs).
+Check out our sample project to see it in action: [`Lombiq.EInvoiceValidator.Sample`](./Lombiq.EInvoiceValidator.Sample/Program.cs).
 
 1. Add the NuGet package to your project or use it as a submodule in your solution.
 2. Perform full validation (schema + schematron)
@@ -47,7 +47,7 @@ Check out our sample project to see it in action: [Lombiq.EInvoiceValidator.Samp
 
 ## Validation Helpers
 
-### SchemaValidationHelper
+### `SchemaValidationHelper`
 
 Validate an XML invoice against the XSD schema only:
 
@@ -70,7 +70,7 @@ if (schemaResult.ErrorMessages.Any())
 }
 ```
 
-### SchematronValidationHelper
+### `SchematronValidationHelper`
 
 Validate business rules using schematron only:
 
@@ -94,7 +94,7 @@ if (schematronResult.WarningFailedAsserts.Any())
 }
 ```
 
-### InvoiceFormatHelper
+### `InvoiceFormatHelper`
 
 The `InvoiceFormatHelper` class is used to detect the format of an e-invoice XML (either UBL or CII). It provides async methods to analyze either a string or a stream containing XML and returns the detected `InvoiceFormat` enum value.
 
@@ -123,7 +123,7 @@ This helper is typically used before validation to determine which schema and sc
 
 ## Validation Artifacts
 
-The validation artifacts (XSD and Schematron files) are included in the NuGet package. If you are using this library as a submodule, you can regenerate them by running the Generate-Validation-Files.ps1 PowerShell script in the root of the project. This script will download the latest released CII validation files from the [CEN/TC 434 - EN-16931 - Validation artifacts](https://github.com/ConnectingEurope/eInvoicing-EN16931) repository and download the UBL 2.1 validation files from [OASIS UBL 2.1](https://docs.oasis-open.org/ubl/os-UBL-2.1/), then places them in the correct folder.
+The validation artifacts (XSD and Schematron files) are included in the NuGet package. If you are using this library as a submodule, you can regenerate them by running the __Generate-Validation-Files.ps1__ PowerShell script in the root of the project. This script will download the latest released CII validation files from the [CEN/TC 434 - EN-16931 - Validation artifacts](https://github.com/ConnectingEurope/eInvoicing-EN16931) repository and download the UBL 2.1 validation files from [OASIS UBL 2.1](https://docs.oasis-open.org/ubl/os-UBL-2.1/), then places them in the correct folder.
 
 ## Contributing and support
 

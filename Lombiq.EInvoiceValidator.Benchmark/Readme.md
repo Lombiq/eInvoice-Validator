@@ -35,7 +35,7 @@ You can set how many runs you want to perform and the delay between them by sett
 | 10 | 160.11 | 758.16 |
 | **AVG** | **160.146** | **722.882** |
 
-Schematron Inner means the inner process of the Schematron validation. Total means the total time taken for the whole validation process, including the Schematron validation and Schema validation. The most time consuming part is calling the Schematron validation, because it runs in a separate Node.js process, so it has to serialize the XML, send it to the Node.js process, run the validation there, and then deserialize the result back to the C# code. Schema validation takes maximum 1-3 ms, so it's not included in the results.
+Schematron Inner means the inner process of the Schematron validation. Total means the total time taken for the whole validation process, including the Schematron validation and Schema validation. The most time-consuming part is calling the Schematron validation, because it runs in a separate Node.js process. It has to serialize the XML, send it to the Node.js process, run the validation there, and then deserialize the result back to the C# code. Schema validation takes maximum 1-3 ms, so it's not included in the results.
 
 ## Contributing and support
 

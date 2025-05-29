@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <None Include="..\Lombiq.EInvoiceValidator.Sample\SampleInvoices\**\*.xml">
-      <Link>UnitTests\SampleInvoices\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <Link>Tests\SampleInvoices\%(RecursiveDir)%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

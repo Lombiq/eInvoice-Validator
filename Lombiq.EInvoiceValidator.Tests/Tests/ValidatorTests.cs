@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Lombiq.EInvoiceValidator.Tests.UnitTests;
+namespace Lombiq.EInvoiceValidator.Tests.Tests;
 
 public class ValidatorTests
 {

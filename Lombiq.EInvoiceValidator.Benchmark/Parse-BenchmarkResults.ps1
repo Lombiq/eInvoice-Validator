@@ -1,6 +1,13 @@
 ﻿# Path to the folder containing your .md benchmark result files.
 $benchmarkFolder = "$PSScriptRoot\BenchmarkResults"
 
+# Ensure the benchmark folder exists.
+if (-not (Test-Path $benchmarkFolder))
+{
+    Write-Error "Benchmark results folder '$benchmarkFolder' does not exist."
+    exit 1
+}
+
 # List to collect parsed benchmark results.
 $results = @()
 

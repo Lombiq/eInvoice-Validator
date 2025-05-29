@@ -122,6 +122,12 @@ public static class ValidationBenchmarkHelpers
         logBuilder.AppendLine(FormatSummaryRow(averageDurations));
         logBuilder.AppendLine();
 
+        // Create the BenchmarkResults directory if it doesn't exist.
+        if (!Directory.Exists("BenchmarkResults"))
+        {
+            Directory.CreateDirectory("BenchmarkResults");
+        }
+
         var outputPath = Path.Combine("BenchmarkResults", "test_1.md");
         Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
         if (File.Exists(outputPath))

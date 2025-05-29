@@ -13,11 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BenchmarkResults\" />
-    <Folder Include="BenchmarkRunLogs\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\Lombiq.EInvoiceValidator.Sample\SampleInvoices\**\*.xml">
       <Link>SampleInvoices\%(RecursiveDir)%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -59,7 +59,7 @@
     </Content>
 
     <!--  Needed for projects that references this module directly.  -->
-    <Content Include="node_modules\**\*">
+    <Content Condition="'$(NuGetBuild)' != 'true'" Include="node_modules\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -67,7 +67,14 @@
   <!--  Needed for projects that uses this project by a NuGet package.  -->
   <Target Name="AddNodeModules" AfterTargets="NpmDotnetPrebuild">
     <ItemGroup>
-      <Content Include="node_modules\**\*">
+      <Content Include="
+      node_modules\**\*.js;
+      node_modules\**\*.json;
+      node_modules\**\*.node;
+      node_modules\**\LICENSE*;
+      node_modules\**\license*;
+      "
+      Exclude="node_modules\.pnpm\**\*">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <Pack>true</Pack>
         <PackagePath>contentFiles\any\any\node_modules</PackagePath>

@@ -1,4 +1,4 @@
-﻿using Jering.Javascript.NodeJS;
+using Jering.Javascript.NodeJS;
 using Lombiq.EInvoiceValidator.Extensions;
 using Lombiq.EInvoiceValidator.Helpers;
 using Lombiq.EInvoiceValidator.Services;
@@ -35,24 +35,24 @@ foreach (var filePath in filePaths)
     if (result.Successful)
     {
         Console.WriteLine($"The invoice in {filePath} is valid.");
-        continue;
     }
-
-    // The files with failing in their name are expected to be invalid in the example.
-    Console.WriteLine($"The invoice in {filePath} is invalid.");
-    LogValidationErrors(result.SchematronValidationResult?.ErrorFailedAsserts);
-    LogValidationErrors(result.SchematronValidationResult?.WarningFailedAsserts);
-    LogValidationErrors(result.SchemaValidationResult?.ErrorMessages);
+    else
+    {
+        // The files with failing in their name are expected to be invalid in the example.
+        Console.WriteLine($"The invoice in {filePath} is invalid.");
+        LogValidationErrors(result.SchematronValidationResult?.ErrorFailedAsserts);
+        LogValidationErrors(result.SchematronValidationResult?.WarningFailedAsserts);
+        LogValidationErrors(result.SchemaValidationResult?.ErrorMessages);
+    }
 }
 
 static void LogValidationErrors<T>(IList<T> failedAsserts)
     where T : class
 {
-    if (failedAsserts != null)
+    if (failedAsserts == null) return;
+
+    foreach (var failedAssert in failedAsserts)
     {
-        foreach (var failedAssert in failedAsserts)
-        {
-            Console.WriteLine(failedAssert);
-        }
+        Console.WriteLine(failedAssert);
     }
 }

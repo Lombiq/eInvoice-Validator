@@ -1,4 +1,4 @@
-﻿# Lombiq eInvoice Validator Benchmark
+# Lombiq eInvoice Validator Benchmark
 
 ## About
 
@@ -6,7 +6,7 @@ This a console application to benchmark the Lombiq eInvoice Validator library.
 
 ## How to use
 
-Start the benchmark by running the Run-BenchmarkMultipleTimes.ps1 PowerShell script in the root of the project. This will run the benchmark multiple times to get more reliable results, and then it will generate a `CSV` file with the results in the _BenchmarkResults_ folder. You can also see the logs for each run in the _BenchmarkRunLogs_ folder.
+Start the benchmark by running the _Run-BenchmarkMultipleTimes.ps1_ PowerShell script in the root of the project. This will run the benchmark multiple times to get more reliable results, and then it will generate a `CSV` file with the results in the _BenchmarkResults_ folder. You can also see the logs for each run in the _BenchmarkRunLogs_ folder.
 
 You can set how many runs you want to perform and the delay between them by setting -Runs and -DelayBetweenRunsSeconds parameters, e.g. if you want 2 runs and 10 seconds between them:
 

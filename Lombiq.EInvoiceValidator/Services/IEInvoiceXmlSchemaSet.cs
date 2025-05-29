@@ -4,7 +4,7 @@ using System.Xml.Schema;
 namespace Lombiq.EInvoiceValidator.Services;
 
 /// <summary>
-/// Provides the XML schema set for validating e-invoices against the specified invoice format.
+/// Provides the XML schema set for validating eInvoices against the specified invoice format.
 /// </summary>
 public interface IEInvoiceXmlSchemaSet
 {

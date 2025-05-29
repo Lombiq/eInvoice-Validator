@@ -8,10 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-// Step 0. We use DI to manage the services required for e-invoice validation.
+// Step 0. We use DI to manage the services required for eInvoice validation.
 var services = new ServiceCollection();
 
-// Step 1. Add the necessary services for e-invoice validation.
+// Step 1. Add the necessary services for eInvoice validation.
 services.AddEInvoiceValidationServices();
 
 var serviceProvider = services.BuildServiceProvider();

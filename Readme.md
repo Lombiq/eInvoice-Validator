@@ -96,7 +96,7 @@ if (schematronResult.WarningFailedAsserts.Any())
 
 ### `InvoiceFormatHelper`
 
-The `InvoiceFormatHelper` class is used to detect the format of an e-invoice XML (either UBL or CII). It provides async methods to analyze either a string or a stream containing XML and returns the detected `InvoiceFormat` enum value.
+The `InvoiceFormatHelper` class is used to detect the format of an eInvoice XML (either UBL or CII). It provides async methods to analyze either a string or a stream containing XML and returns the detected `InvoiceFormat` enum value.
 
 ```csharp
 // For XML string.

@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 // Add the services to the DI container.
 var services = new ServiceCollection();
 
-// Step 1. Add the necessary services for e-invoice validation.
+// Step 1. Add the necessary services for eInvoice validation.
 services.AddEInvoiceValidationServices();
 
 // Build the service provider.
@@ -16,5 +16,5 @@ var serviceProvider = services.BuildServiceProvider();
 await ValidationBenchmarkHelpers.RunBenchMarkAsync(
     serviceProvider,
     async (stream, nodeJsService, memoryCache, eInvoiceXmlSchemaSet) =>
-        // Step 2. Validate the e-invoice XML file read into a stream using the helper method.
+        // Step 2. Validate the eInvoice XML file read into a stream using the helper method.
         await InvoiceValidationHelper.ValidateInvoiceAsync(stream, nodeJsService, memoryCache, eInvoiceXmlSchemaSet));

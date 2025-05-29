@@ -15,7 +15,7 @@ public static class EInvoiceStartupExtensions
             options.ProjectPath = Path.GetDirectoryName(typeof(EInvoiceXmlSchemaSet).Assembly.Location) ?? Directory.GetCurrentDirectory());
         services.Configure<OutOfProcessNodeJSServiceOptions>(options => options.Concurrency = Concurrency.MultiProcess);
 
-        // Add E-Invoice validation services.
+        // Add eInvoice validation services.
         services.AddSingleton<IEInvoiceXmlSchemaSet, EInvoiceXmlSchemaSet>();
         services.AddMemoryCache();
     }

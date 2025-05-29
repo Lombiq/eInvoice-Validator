@@ -12,6 +12,13 @@ Do you want to quickly try out this project and see it in action? Check it out i
 
 We have a benchmark project to measure the performance of the validation process. You can find it here: [`Lombiq.EInvoiceValidator.Benchmark`](./Lombiq.EInvoiceValidator.Benchmark/Readme.md).
 
+## Projects
+
+- The main library for validating eInvoices - [Lombiq.EInvoiceValidator](./Lombiq.EInvoiceValidator/Lombiq.EInvoiceValidator.csproj)
+- A sample console application demonstrating how to use the library - [Lombiq.EInvoiceValidator.Sample](./Lombiq.EInvoiceValidator.Sample/Readme.md)
+- A benchmark project to measure the performance of the validation process. - [Lombiq.EInvoiceValidator.Benchmark](./Lombiq.EInvoiceValidator.Benchmark/Readme.md)
+- Unit tests for the library. - [Lombiq.EInvoiceValidator.Tests](./Lombiq.EInvoiceValidator.Tests/Lombiq.EInvoiceValidator.Tests.csproj)
+
 ## Prerequisites
 
 - Node.js

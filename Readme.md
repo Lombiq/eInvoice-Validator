@@ -27,7 +27,7 @@ We have a benchmark project to measure the performance of the validation process
 
 ## Getting Started
 
-Check out our sample project to see it in action: [`Lombiq.EInvoiceValidator.Sample`](./Lombiq.EInvoiceValidator.Sample/Program.cs).
+These samples don't contain the common setup necessary before you can use the validation methods. For those, and to see them in action, check out our sample project: [`Lombiq.EInvoiceValidator.Sample`](./Lombiq.EInvoiceValidator.Sample/Program.cs).
 
 1. Add the NuGet package to your project or use it as a submodule in your solution.
 2. Perform full validation (schema + schematron)

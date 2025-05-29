@@ -13,7 +13,8 @@ public interface IInvoiceValidationService
     /// <summary>
     /// Validates the given XML content against the eInvoice schema and schematron rules (EN 16931 UBL or CII).
     /// </summary>
-    /// <param name="stopOnSchemaError">If set to <see langword="true"/> schematron validation will be skiped in case there are schema errors.</param>
+    /// <param name="stopOnSchemaError">If set to <see langword="true"/> schematron validation will be skipped in case there are schema errors.
+    /// </param>
     /// <returns>Returns an <see cref="InvoiceValidationResult"/> object with the result.</returns>
     Task<InvoiceValidationResult> ValidateInvoiceAsync(
         string xml,
@@ -23,7 +24,8 @@ public interface IInvoiceValidationService
     /// <summary>
     /// Validates the given XML stream against the eInvoice schema and schematron rules (EN 16931 UBL or CII).
     /// </summary>
-    /// <param name="stopOnSchemaError">If set to <see langword="true"/> schematron validation will be skiped in case there are schema errors.</param>
+    /// <param name="stopOnSchemaError">If set to <see langword="true"/> schematron validation will be skipped in case there are schema errors.
+    /// </param>
     /// <returns>Returns an <see cref="InvoiceValidationResult"/> object with the result.</returns>
     Task<InvoiceValidationResult> ValidateInvoiceAsync(
         Stream xmlStream,

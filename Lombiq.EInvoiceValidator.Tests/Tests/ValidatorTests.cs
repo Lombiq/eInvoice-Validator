@@ -27,7 +27,7 @@ public class ValidatorTests
 
     [Theory]
     [MemberData(nameof(InvoiceFilePaths))]
-    public async Task TestInvoiceValidationHelper(string filePath)
+    public async Task TestInvoiceValidation(string filePath)
     {
         var services = new ServiceCollection();
         services.AddEInvoiceValidationServices();

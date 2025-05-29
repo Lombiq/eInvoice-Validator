@@ -132,7 +132,7 @@ This helper is typically used before validation to determine which schema and sc
 
 ## Validation Artifacts
 
-The validation artifacts (XSD and schematron files) are included in the NuGet package. If you are using this library as a submodule, you can regenerate them by running the __Generate-Validation-Files.ps1__ PowerShell script in the root of the project. This script will download the latest released CII validation files from the [CEN/TC 434 - EN-16931 - Validation artifacts](https://github.com/ConnectingEurope/eInvoicing-EN16931) repository and download the UBL 2.1 validation files from [OASIS UBL 2.1](https://docs.oasis-open.org/ubl/os-UBL-2.1/), then places them in the correct folder.
+The validation artifacts (XSD and schematron files) are included in the NuGet package. If you are using this library as a submodule, you can regenerate them by running the _Generate-Validation-Files.ps1_ PowerShell script in the root of the project. This script will download the latest released CII validation files from the [CEN/TC 434 - EN-16931 - Validation artifacts](https://github.com/ConnectingEurope/eInvoicing-EN16931) repository and download the UBL 2.1 validation files from [OASIS UBL 2.1](https://docs.oasis-open.org/ubl/os-UBL-2.1/), then places them in the correct folder.
 
 ## Contributing and support
 

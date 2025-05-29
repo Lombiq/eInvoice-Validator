@@ -67,14 +67,7 @@
   <!--  Needed for projects that uses this project by a NuGet package.  -->
   <Target Name="AddNodeModules" AfterTargets="NpmDotnetPrebuild">
     <ItemGroup>
-      <Content Include="
-      node_modules\**\*.js;
-      node_modules\**\*.json;
-      node_modules\**\*.node;
-      node_modules\**\LICENSE*;
-      node_modules\**\license*;
-      "
-      Exclude="node_modules\.pnpm\**\*">
+      <Content Include="node_modules\**\*" Exclude="node_modules\.pnpm\**\*;node_modules\.bin\**\*;">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <Pack>true</Pack>
         <PackagePath>contentFiles\any\any\node_modules</PackagePath>

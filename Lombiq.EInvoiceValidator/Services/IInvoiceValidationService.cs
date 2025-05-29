@@ -16,4 +16,8 @@ public interface IInvoiceValidationService
         Stream xmlStream,
         bool stopOnSchemaError = false,
         CancellationToken cancellationToken = default);
+
+    Task<InvoiceFormat> DetectFormatAsync(string xmlContent);
+
+    Task<InvoiceFormat> DetectFormatAsync(Stream xmlStream);
 }

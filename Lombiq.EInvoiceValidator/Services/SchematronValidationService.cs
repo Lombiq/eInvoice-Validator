@@ -1,5 +1,4 @@
 ﻿using Jering.Javascript.NodeJS;
-using Lombiq.EInvoiceValidator.Helpers;
 using Lombiq.EInvoiceValidator.Models;
 using Microsoft.Extensions.Caching.Memory;
 using System;
@@ -47,8 +46,7 @@ public class SchematronValidationService : ISchematronValidationService
             _ => throw new NotSupportedException("Unsupported format"),
         };
 
-        var convertedSchematronFilePath = ResourceHelper.ExtractResourceToTempFile(
-            _memoryCache,
+        var convertedSchematronFilePath = ExtractResourceToTempFile(
             resourceName,
             format == InvoiceFormat.CII ? En16931CiiValidationSefJson : En16931UblValidationSefJson);
 
@@ -109,4 +107,25 @@ public class SchematronValidationService : ISchematronValidationService
 
         return new FailedAssert(id, location, test, isError, text);
     }
+
+    private string ExtractResourceToTempFile(string resourceName, string targetFileName) =>
+        _memoryCache.GetOrCreate(resourceName, _ =>
+        {
+            var tempDir = Path.Combine(Path.GetTempPath(), "EInvoiceValidator");
+            Directory.CreateDirectory(tempDir);
+
+            var targetPath = Path.Combine(tempDir, targetFileName);
+
+            if (!File.Exists(targetPath))
+            {
+                var assembly = typeof(SchematronValidationService).Assembly;
+                using var resourceStream = assembly.GetManifestResourceStream(resourceName)
+                                           ?? throw new InvalidOperationException($"Resource not found: {resourceName}");
+
+                using var fileStream = File.Create(targetPath);
+                resourceStream.CopyTo(fileStream);
+            }
+
+            return targetPath;
+        });
 }

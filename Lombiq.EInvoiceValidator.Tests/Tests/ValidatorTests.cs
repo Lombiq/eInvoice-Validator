@@ -10,8 +10,24 @@ namespace Lombiq.EInvoiceValidator.Tests.Tests;
 
 public class ValidatorTests
 {
-    [Fact]
-    public async Task TestInvoiceValidationHelper()
+    public static TheoryData<string> InvoiceFilePaths
+    {
+        get
+        {
+            var theoryData = new TheoryData<string>();
+            var filePath = Path.Combine("Tests", "SampleInvoices");
+            foreach (var file in Directory.GetFiles(filePath, "*.xml", SearchOption.AllDirectories))
+            {
+                theoryData.Add(file);
+            }
+
+            return theoryData;
+        }
+    }
+
+    [Theory]
+    [MemberData(nameof(InvoiceFilePaths))]
+    public async Task TestInvoiceValidationHelper(string filePath)
     {
         var services = new ServiceCollection();
         services.AddEInvoiceValidationServices();
@@ -19,23 +35,18 @@ public class ValidatorTests
 
         var invoiceValidationService = serviceProvider.GetRequiredService<IInvoiceValidationService>();
 
-        var filePaths = Directory.GetFiles(Path.Combine("UnitTests", "SampleInvoices"), "*.xml", SearchOption.AllDirectories);
+        using var streamReaderInner = new StreamReader(filePath);
+        var result = await invoiceValidationService.ValidateInvoiceAsync(
+            streamReaderInner.BaseStream,
+            cancellationToken: TestContext.Current.CancellationToken);
 
-        foreach (var filePath in filePaths)
+        if (filePath.Contains("failing"))
         {
-            using var streamReaderInner = new StreamReader(filePath);
-            var result = await invoiceValidationService.ValidateInvoiceAsync(
-                streamReaderInner.BaseStream,
-                cancellationToken: TestContext.Current.CancellationToken);
-
-            if (filePath.Contains("failing"))
-            {
-                result.Successful.ShouldBeFalse();
-            }
-            else
-            {
-                result.Successful.ShouldBeTrue();
-            }
+            result.Successful.ShouldBeFalse($"{filePath} should fail validation but did not.");
+        }
+        else
+        {
+            result.Successful.ShouldBeTrue($"{filePath} should pass validation but did not.");
         }
     }
 }

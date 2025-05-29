@@ -30,7 +30,7 @@ public class SchematronValidationService : ISchematronValidationService
     }
 
     /// <summary>
-    /// Executes the Schematron validation for the given XML using the specified format.
+    /// Executes the schematron validation for the given XML using the specified format.
     /// </summary>
     /// <exception cref="NotSupportedException">Thrown when the <see cref="InvoiceFormat"/> is <see cref="InvoiceFormat.Unknown"/>.</exception>
     /// <exception cref="InvalidOperationException">Thrown when the schematron validator SaxonJs returns with an exception.</exception>

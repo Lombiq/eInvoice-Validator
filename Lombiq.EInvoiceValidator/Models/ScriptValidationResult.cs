@@ -1,4 +1,3 @@
-﻿#nullable enable
-namespace Lombiq.EInvoiceValidator.Models;
+﻿namespace Lombiq.EInvoiceValidator.Models;
 
 public record ScriptValidationResult(string OutputXml, int DurationMs, string? Error = null);

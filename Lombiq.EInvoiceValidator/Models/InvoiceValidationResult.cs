@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using Lombiq.EInvoiceValidator.Constants;
+﻿using Lombiq.EInvoiceValidator.Constants;
 
 namespace Lombiq.EInvoiceValidator.Models;
 

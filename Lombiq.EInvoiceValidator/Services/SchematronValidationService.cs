@@ -46,7 +46,7 @@ public class SchematronValidationService : ISchematronValidationService
             _ => throw new NotSupportedException("Unsupported format"),
         };
 
-        var convertedSchematronFilePath = ExtractResourceToTempFile(
+        var convertedSchematronFilePath = await ExtractResourceToTempFileAsync(
             resourceName,
             format == InvoiceFormat.CII ? En16931CiiValidationSefJson : En16931UblValidationSefJson);
 
@@ -56,9 +56,9 @@ public class SchematronValidationService : ISchematronValidationService
             [convertedSchematronFilePath, xml],
             cancellationToken);
 
-        if (result.Error != null)
+        if (result is not { Error: null })
         {
-            throw new InvalidOperationException($"An unexpected fatal error happened: {result.Error}");
+            throw new InvalidOperationException($"An unexpected fatal error happened: {result?.Error}");
         }
 
         var schematronValidationResult = new SchematronValidationResult { InnerValidationDurationMs = result.DurationMs };
@@ -108,23 +108,25 @@ public class SchematronValidationService : ISchematronValidationService
         return new FailedAssert(id, location, test, isError, text);
     }
 
-    private string ExtractResourceToTempFile(string resourceName, string targetFileName) =>
-        _memoryCache.GetOrCreate(resourceName, _ =>
+    private Task<string?> ExtractResourceToTempFileAsync(string resourceName, string targetFileName) =>
+        _memoryCache.GetOrCreateAsync(resourceName, async _ =>
         {
             var tempDir = Path.Combine(Path.GetTempPath(), "EInvoiceValidator");
             Directory.CreateDirectory(tempDir);
 
             var targetPath = Path.Combine(tempDir, targetFileName);
 
-            if (!File.Exists(targetPath))
+            if (File.Exists(targetPath))
             {
-                var assembly = typeof(SchematronValidationService).Assembly;
-                using var resourceStream = assembly.GetManifestResourceStream(resourceName)
-                                           ?? throw new InvalidOperationException($"Resource not found: {resourceName}");
-
-                using var fileStream = File.Create(targetPath);
-                resourceStream.CopyTo(fileStream);
+                return targetPath;
             }
+
+            var assembly = typeof(SchematronValidationService).Assembly;
+            await using var resourceStream = assembly.GetManifestResourceStream(resourceName)
+                ?? throw new InvalidOperationException($"Resource not found: {resourceName}");
+
+            await using var fileStream = File.Create(targetPath);
+            await resourceStream.CopyToAsync(fileStream);
 
             return targetPath;
         });

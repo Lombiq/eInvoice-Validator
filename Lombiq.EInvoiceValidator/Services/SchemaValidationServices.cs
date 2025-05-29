@@ -1,21 +1,21 @@
 ﻿using Lombiq.EInvoiceValidator.Models;
-using Lombiq.EInvoiceValidator.Services;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
 
-namespace Lombiq.EInvoiceValidator.Helpers;
+namespace Lombiq.EInvoiceValidator.Services;
 
-public static class SchemaValidationHelper
+public class SchemaValidationServices : ISchemaValidationServices
 {
-    public static async Task<SchemaValidationResult> ValidateXmlAgainstSchemaAsync(
-        string xml,
-        InvoiceFormat format,
-        IEInvoiceXmlSchemaSet eInvoiceXmlSchemaSet)
+    private readonly IEInvoiceXmlSchemaSet _eInvoiceXmlSchemaSet;
+
+    public SchemaValidationServices(IEInvoiceXmlSchemaSet eInvoiceXmlSchemaSet) => _eInvoiceXmlSchemaSet = eInvoiceXmlSchemaSet;
+
+    public async Task<SchemaValidationResult> ValidateXmlAgainstSchemaAsync(string xml, InvoiceFormat format)
     {
         var result = new SchemaValidationResult();
-        var xmlSchemaSet = eInvoiceXmlSchemaSet.GetSchemaSet(format);
+        var xmlSchemaSet = _eInvoiceXmlSchemaSet.GetSchemaSet(format);
         var xmlReaderSettings = CreateReaderSettings(xmlSchemaSet, ValidationEventHandler(result));
 
         using var stringReader = new StringReader(xml);
@@ -25,16 +25,13 @@ public static class SchemaValidationHelper
         return result;
     }
 
-    public static async Task<SchemaValidationResult> ValidateXmlAgainstSchemaAsync(
-        Stream xmlStream,
-        InvoiceFormat format,
-        IEInvoiceXmlSchemaSet eInvoiceXmlSchemaSet)
+    public async Task<SchemaValidationResult> ValidateXmlAgainstSchemaAsync(Stream xmlStream, InvoiceFormat format)
     {
         var result = new SchemaValidationResult();
 
         if (xmlStream.CanSeek) xmlStream.Position = 0;
 
-        var xmlSchemaSet = eInvoiceXmlSchemaSet.GetSchemaSet(format);
+        var xmlSchemaSet = _eInvoiceXmlSchemaSet.GetSchemaSet(format);
         var xmlReaderSettings = CreateReaderSettings(xmlSchemaSet, ValidationEventHandler(result));
 
         using var xmlReader = XmlReader.Create(xmlStream, xmlReaderSettings);

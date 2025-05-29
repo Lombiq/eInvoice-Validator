@@ -1,4 +1,5 @@
 ﻿using Jering.Javascript.NodeJS;
+using Lombiq.EInvoiceValidator.Helpers;
 using Lombiq.EInvoiceValidator.Models;
 using Microsoft.Extensions.Caching.Memory;
 using System;
@@ -7,9 +8,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Lombiq.EInvoiceValidator.Helpers;
+namespace Lombiq.EInvoiceValidator.Services;
 
-public static class SchematronValidationHelper
+public class SchematronValidationService : ISchematronValidationService
 {
     private const string CiiSefJson = "Lombiq.EInvoiceValidator.JsonStylesheets.EN16931-CII-validation.sef.json";
     private const string UblSefJson = "Lombiq.EInvoiceValidator.JsonStylesheets.EN16931-UBL-validation.sef.json";
@@ -20,16 +21,23 @@ public static class SchematronValidationHelper
     private const string FailedAssert = "failed-assert";
     private const string HttpPurlOclcOrgDsdlSvrl = "http://purl.oclc.org/dsdl/svrl";
 
+    private readonly INodeJSService _nodeJsService;
+    private readonly IMemoryCache _memoryCache;
+
+    public SchematronValidationService(INodeJSService nodeJSService, IMemoryCache memoryCache)
+    {
+        _nodeJsService = nodeJSService;
+        _memoryCache = memoryCache;
+    }
+
     /// <summary>
     /// Executes the Schematron validation for the given XML using the specified format.
     /// </summary>
     /// <exception cref="NotSupportedException">Thrown when the <see cref="InvoiceFormat"/> is <see cref="InvoiceFormat.Unknown"/>.</exception>
     /// <exception cref="InvalidOperationException">Thrown when the schematron validator SaxonJs returns with an exception.</exception>
-    public static async Task<SchematronValidationResult> ExecuteSchematronValidationAsync(
+    public async Task<SchematronValidationResult> ExecuteSchematronValidationAsync(
         string xml,
         InvoiceFormat format,
-        INodeJSService nodeJsService,
-        IMemoryCache memoryCache,
         CancellationToken cancellationToken = default)
     {
         var resourceName = format switch
@@ -40,11 +48,11 @@ public static class SchematronValidationHelper
         };
 
         var convertedSchematronFilePath = ResourceHelper.ExtractResourceToTempFile(
-            memoryCache,
+            _memoryCache,
             resourceName,
             format == InvoiceFormat.CII ? En16931CiiValidationSefJson : En16931UblValidationSefJson);
 
-        var result = await nodeJsService.InvokeFromFileAsync<ScriptValidationResult>(
+        var result = await _nodeJsService.InvokeFromFileAsync<ScriptValidationResult>(
             ValidatorJs,
             ExportName,
             [convertedSchematronFilePath, xml],

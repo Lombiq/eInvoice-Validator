@@ -1,6 +1,6 @@
 ﻿using Lombiq.EInvoiceValidator.Benchmark.Helpers;
 using Lombiq.EInvoiceValidator.Extensions;
-using Lombiq.EInvoiceValidator.Helpers;
+using Lombiq.EInvoiceValidator.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 // Add the services to the DI container.
@@ -11,10 +11,10 @@ services.AddEInvoiceValidationServices();
 
 // Build the service provider.
 var serviceProvider = services.BuildServiceProvider();
+var invoiceValidationService = serviceProvider.GetRequiredService<IInvoiceValidationService>();
 
 // Start the benchmark.
 await ValidationBenchmarkHelpers.RunBenchMarkAsync(
-    serviceProvider,
-    async (stream, nodeJsService, memoryCache, eInvoiceXmlSchemaSet) =>
+    async stream =>
         // Step 2. Validate the eInvoice XML file read into a stream using the helper method.
-        await InvoiceValidationHelper.ValidateInvoiceAsync(stream, nodeJsService, memoryCache, eInvoiceXmlSchemaSet));
+        await invoiceValidationService.ValidateInvoiceAsync(stream));

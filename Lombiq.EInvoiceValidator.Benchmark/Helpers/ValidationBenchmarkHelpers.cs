@@ -1,9 +1,5 @@
-﻿using Jering.Javascript.NodeJS;
-using Lombiq.EInvoiceValidator.Benchmark.Models;
+﻿using Lombiq.EInvoiceValidator.Benchmark.Models;
 using Lombiq.EInvoiceValidator.Models;
-using Lombiq.EInvoiceValidator.Services;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,16 +18,15 @@ public static class ValidationBenchmarkHelpers
     private const int BatchCount = 10;
     private const int MinDelayBetweenBatchesMs = 1000;
     private const bool DoWarmup = true;
+    private const string BenchmarkResults = "BenchmarkResults";
 
-    public static async Task RunBenchMarkAsync(
-        IServiceProvider serviceProvider,
-        Func<Stream, INodeJSService, IMemoryCache, IEInvoiceXmlSchemaSet, Task<InvoiceValidationResult>> action)
+    public static async Task RunBenchMarkAsync(Func<Stream, Task<InvoiceValidationResult>> action)
     {
         // Warm-up run before benchmark.
         if (DoWarmup)
         {
             Console.WriteLine($"Warming up by running {BatchSize} validations...");
-            await RunValidationForBatchAsync(serviceProvider, action, 1);
+            await RunValidationForBatchAsync(action, 1);
         }
 
         var results = new List<BenchmarkRunResult>();
@@ -40,7 +35,7 @@ public static class ValidationBenchmarkHelpers
             Console.WriteLine($"Starting batch {(batchIndex + 1).ToTechnicalString()} of {BatchCount}...");
             var stopwatch = Stopwatch.StartNew();
 
-            var batchResults = await RunValidationForBatchAsync(serviceProvider, action, batchIndex);
+            var batchResults = await RunValidationForBatchAsync(action, batchIndex);
 
             stopwatch.Stop();
 
@@ -60,8 +55,7 @@ public static class ValidationBenchmarkHelpers
     }
 
     private static async Task<BenchmarkRunResult[]> RunValidationForBatchAsync(
-        IServiceProvider serviceProvider,
-        Func<Stream, INodeJSService, IMemoryCache, IEInvoiceXmlSchemaSet, Task<InvoiceValidationResult>> action,
+        Func<Stream, Task<InvoiceValidationResult>> action,
         int batchIndex)
     {
         var filePaths = Directory.GetFiles(
@@ -74,24 +68,19 @@ public static class ValidationBenchmarkHelpers
             .ToList();
 
         // Run the validations in parallel.
-        var batchResults = await Task.WhenAll(filesInBatch.Select(filePath => ValidateAsync(filePath, serviceProvider, action)));
+        var batchResults = await Task.WhenAll(filesInBatch.Select(filePath => ValidateAsync(filePath, action)));
         return batchResults;
     }
 
     private static async Task<BenchmarkRunResult> ValidateAsync(
         string filePath,
-        IServiceProvider serviceProvider,
-        Func<Stream, INodeJSService, IMemoryCache, IEInvoiceXmlSchemaSet, Task<InvoiceValidationResult>> action)
+        Func<Stream, Task<InvoiceValidationResult>> action)
     {
-        var nodeJsService = serviceProvider.GetRequiredService<INodeJSService>();
-        var memoryCache = serviceProvider.GetRequiredService<IMemoryCache>();
-        var eInvoiceXmlSchemaSet = serviceProvider.GetRequiredService<IEInvoiceXmlSchemaSet>();
-
         using var streamReaderInner = new StreamReader(filePath);
 
         var stopwatch = Stopwatch.StartNew();
         // Call validation.
-        var result = await action(streamReaderInner.BaseStream, nodeJsService, memoryCache, eInvoiceXmlSchemaSet);
+        var result = await action(streamReaderInner.BaseStream);
         stopwatch.Stop();
 
         return new BenchmarkRunResult { Result = result, ElapsedMilliseconds = stopwatch.ElapsedMilliseconds };
@@ -123,12 +112,12 @@ public static class ValidationBenchmarkHelpers
         logBuilder.AppendLine();
 
         // Create the BenchmarkResults directory if it doesn't exist.
-        if (!Directory.Exists("BenchmarkResults"))
+        if (!Directory.Exists(BenchmarkResults))
         {
-            Directory.CreateDirectory("BenchmarkResults");
+            Directory.CreateDirectory(BenchmarkResults);
         }
 
-        var outputPath = Path.Combine("BenchmarkResults", "test_1.md");
+        var outputPath = Path.Combine(BenchmarkResults, "test_1.md");
         Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
         if (File.Exists(outputPath))
         {
@@ -136,7 +125,7 @@ public static class ValidationBenchmarkHelpers
             string newPath;
             do
             {
-                newPath = Path.Combine("BenchmarkResults", $"test_{i.ToTechnicalString()}.md");
+                newPath = Path.Combine(BenchmarkResults, $"test_{i.ToTechnicalString()}.md");
                 i++;
             }
             while (File.Exists(newPath));

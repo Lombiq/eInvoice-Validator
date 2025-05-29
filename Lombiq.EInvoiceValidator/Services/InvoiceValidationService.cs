@@ -1,48 +1,46 @@
-﻿using Jering.Javascript.NodeJS;
+﻿using Lombiq.EInvoiceValidator.Helpers;
 using Lombiq.EInvoiceValidator.Models;
-using Lombiq.EInvoiceValidator.Services;
-using Microsoft.Extensions.Caching.Memory;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Lombiq.EInvoiceValidator.Helpers;
+namespace Lombiq.EInvoiceValidator.Services;
 
-public static class InvoiceValidationHelper
+public class InvoiceValidationService : IInvoiceValidationService
 {
-    public static async Task<InvoiceValidationResult> ValidateInvoiceAsync(
+    private readonly ISchematronValidationService _schematronValidationService;
+    private readonly ISchemaValidationServices _schemaValidationServices;
+
+    public InvoiceValidationService(
+        ISchemaValidationServices schemaValidationServices,
+        ISchematronValidationService schematronValidationService)
+    {
+        _schemaValidationServices = schemaValidationServices;
+        _schematronValidationService = schematronValidationService;
+    }
+
+    public async Task<InvoiceValidationResult> ValidateInvoiceAsync(
         string xml,
-        INodeJSService nodeJsService,
-        IMemoryCache memoryCache,
-        IEInvoiceXmlSchemaSet eInvoiceXmlSchemaSet,
         bool stopOnSchemaError = false,
         CancellationToken cancellationToken = default)
     {
         var invoiceFormat = await InvoiceFormatHelper.DetectFormatAsync(xml);
-        var schema = await SchemaValidationHelper.ValidateXmlAgainstSchemaAsync(xml, invoiceFormat, eInvoiceXmlSchemaSet);
+        var schema = await _schemaValidationServices.ValidateXmlAgainstSchemaAsync(xml, invoiceFormat);
         if (stopOnSchemaError && schema.ErrorMessages.Any())
         {
             return new InvoiceValidationResult(schema, SchematronValidationResult: null, invoiceFormat);
         }
 
-        var schematron = await SchematronValidationHelper.ExecuteSchematronValidationAsync(
-            xml,
-            invoiceFormat,
-            nodeJsService,
-            memoryCache,
-            cancellationToken);
+        var schematron = await _schematronValidationService.ExecuteSchematronValidationAsync(xml, invoiceFormat, cancellationToken);
 
         var (failed, hasWarnings) = DetermineValidationStatus(schema, schematron);
 
         return new InvoiceValidationResult(schema, schematron, invoiceFormat, Successful: !failed, HasWarnings: hasWarnings);
     }
 
-    public static async Task<InvoiceValidationResult> ValidateInvoiceAsync(
+    public async Task<InvoiceValidationResult> ValidateInvoiceAsync(
         Stream xmlStream,
-        INodeJSService nodeJsService,
-        IMemoryCache memoryCache,
-        IEInvoiceXmlSchemaSet eInvoiceXmlSchemaSet,
         bool stopOnSchemaError = false,
         CancellationToken cancellationToken = default)
     {
@@ -64,7 +62,7 @@ public static class InvoiceValidationHelper
 
         ResetStreamPosition(reusableStream);
 
-        var schema = await SchemaValidationHelper.ValidateXmlAgainstSchemaAsync(reusableStream, invoiceFormat, eInvoiceXmlSchemaSet);
+        var schema = await _schemaValidationServices.ValidateXmlAgainstSchemaAsync(reusableStream, invoiceFormat);
         if (stopOnSchemaError && schema.ErrorMessages.Any())
         {
             return new InvoiceValidationResult(schema, SchematronValidationResult: null, invoiceFormat);
@@ -74,12 +72,8 @@ public static class InvoiceValidationHelper
 
         using var reader = new StreamReader(xmlStream);
         var xmlText = await reader.ReadToEndAsync(cancellationToken);
-        var schematron = await SchematronValidationHelper.ExecuteSchematronValidationAsync(
-            xmlText,
-            invoiceFormat,
-            nodeJsService,
-            memoryCache,
-            cancellationToken);
+
+        var schematron = await _schematronValidationService.ExecuteSchematronValidationAsync(xmlText, invoiceFormat, cancellationToken);
 
         var (failed, hasWarnings) = DetermineValidationStatus(schema, schematron);
 

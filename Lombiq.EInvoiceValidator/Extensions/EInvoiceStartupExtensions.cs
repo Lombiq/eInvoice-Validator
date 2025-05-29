@@ -18,5 +18,8 @@ public static class EInvoiceStartupExtensions
         // Add eInvoice validation services.
         services.AddSingleton<IEInvoiceXmlSchemaSet, EInvoiceXmlSchemaSet>();
         services.AddMemoryCache();
+        services.AddScoped<IInvoiceValidationService, InvoiceValidationService>();
+        services.AddScoped<ISchematronValidationService, SchematronValidationService>();
+        services.AddScoped<ISchemaValidationServices, SchemaValidationServices>();
     }
 }

@@ -1,6 +1,6 @@
 # Lombiq eInvoice Validator
 
-[![Lombiq EInvoiceValidator NuGet](https://img.shields.io/nuget/v/Lombiq.EInvoiceValidator?label=Lombiq.EInvoiceValidator)](https://www.nuget.org/packages/Lombiq.EInvoiceValidator/)
+[![Lombiq EInvoiceValidator NuGet](https://img.shields.io/nuget/v/Lombiq.EInvoiceValidator?label=Lombiq.EInvoiceValidator)](https://www.nuget.org/packages/Lombiq.EInvoiceValidator/) [![Lombiq EInvoiceValidator Sample NuGet](https://img.shields.io/nuget/v/Lombiq.EInvoiceValidator.Sample?label=Lombiq.EInvoiceValidator.Sample)](https://www.nuget.org/packages/Lombiq.EInvoiceValidator.Sample/)
 
 ## About
 

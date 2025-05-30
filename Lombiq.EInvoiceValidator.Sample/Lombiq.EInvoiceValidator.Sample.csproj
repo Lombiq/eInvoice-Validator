@@ -25,11 +25,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
   </ItemGroup>
   
-  <ItemGroup Condition="'$(NuGetBuild)' == 'true'" >
-    <PackageReference Include="Lombiq.EInvoiceValidator" Version="0.1.0-alpha.1.osoe-1109" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(NuGetBuild)' != 'true'">
+  <ItemGroup>
     <ProjectReference Include="..\Lombiq.EInvoiceValidator\Lombiq.EInvoiceValidator.csproj" />
   </ItemGroup>
 

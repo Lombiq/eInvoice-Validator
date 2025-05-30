@@ -12,16 +12,16 @@ Do you want to quickly try out this project and see it in action? Check it out i
 
 ## Projects
 
-- The main library for validating eInvoices - [Lombiq.EInvoiceValidator](./Lombiq.EInvoiceValidator/Lombiq.EInvoiceValidator.csproj)
-- A sample console application demonstrating how to use the library - [Lombiq.EInvoiceValidator.Sample](./Lombiq.EInvoiceValidator.Sample/Readme.md)
-- A benchmark project to measure the performance of the validation process. - [Lombiq.EInvoiceValidator.Benchmark](./Lombiq.EInvoiceValidator.Benchmark/Readme.md)
-- Unit tests for the library. - [Lombiq.EInvoiceValidator.Tests](./Lombiq.EInvoiceValidator.Tests/Lombiq.EInvoiceValidator.Tests.csproj)
+- The main library for validating eInvoices: [`Lombiq.EInvoiceValidator`](./Lombiq.EInvoiceValidator).
+- A sample console application demonstrating how to use the library: [`Lombiq.EInvoiceValidator.Sample`](./Lombiq.EInvoiceValidator.Sample).
+- A benchmark project to measure the performance of the validation process: [`Lombiq.EInvoiceValidator.Benchmark`](./Lombiq.EInvoiceValidator.Benchmark).
+- Unit tests for the library: [`Lombiq.EInvoiceValidator.Tests`](./Lombiq.EInvoiceValidator.Tests).
 
 ## Prerequisites
 
-- Node.js (LTS version recommended) is required to run the schematron validation.
-- The library uses the latest (2.7) [SaxonJS](https://www.npmjs.com/package/saxon-js) with Node.js to execute the schematron validation. This is included automatically by the NuGet package.
-- To have validation files converted from XSLT to SaxonJS compatible `.sef.json` format, we use [xslt3](https://www.npmjs.com/package/xslt3) command line tool. This is included automatically by the NuGet package.
+Node.js is required to run the schematron validation with [SaxonJS](https://www.npmjs.com/package/saxon-js). To have validation files converted from XSLT to SaxonJS compatible `.sef.json` format, we use the [xslt3](https://www.npmjs.com/package/xslt3) command line tool.
+
+You can install Node.js (LTS version recommended) from [here](https://nodejs.org/en/download).
 
 ## Getting Started
 

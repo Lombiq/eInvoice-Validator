@@ -1,4 +1,4 @@
-﻿using Lombiq.EInvoiceValidator.Models;
+using Lombiq.EInvoiceValidator.Models;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,8 +10,8 @@ namespace Lombiq.EInvoiceValidator.Services;
 public interface ISchematronValidationService
 {
     /// <summary>
-    /// Executes schematron validation on the provided XML string for the specified invoice format. Calls a Node.js process to perform the validation
-    /// with SaxonJs.
+    /// Executes schematron validation on the provided XML string for the specified invoice format. Calls a Node.js
+    /// process to perform the validation with SaxonJs.
     /// </summary>
     Task<SchematronValidationResult> ExecuteSchematronValidationAsync(
         string xml,

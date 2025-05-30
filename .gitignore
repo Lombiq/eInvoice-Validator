@@ -16,3 +16,13 @@ node_modules/
 # Mac
 .DS_Store
 
+/.editorconfig
+
+# Benchmark results
+BenchmarkResults/
+BenchmarkRunLogs/
+
+# Generated files
+eInvoicing-EN16931/
+UBL-2.1.zip
+UBL-2.1/

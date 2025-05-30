@@ -1,0 +1,86 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\..\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <DefaultItemExcludes>$(DefaultItemExcludes);.git*</DefaultItemExcludes>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Title>Lombiq eInvoice Validator</Title>
+    <Authors>Lombiq Technologies</Authors>
+    <Copyright>Copyright © 2025, Lombiq Technologies Ltd.</Copyright>
+    <Description>Lombiq eInvoice Validator: Adds validation for EU eInvoices that follow the EN 16931 standard. See the project website for detailed documentation.</Description>
+    <PackageIcon>NuGetIcon.png</PackageIcon>
+    <PackageTags>OrchardCore;Lombiq;AspNetCore;EN16931;eInvoice;XML;UBL;CII</PackageTags>
+    <RepositoryUrl>https://github.com/Lombiq/eInvoice-Validator</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Lombiq/eInvoice-Validator</PackageProjectUrl>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../Readme.md" />
+    <None Include="NuGetIcon.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Jering.Javascript.NodeJS" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
+    <PackageReference Include="Lombiq.HelpfulLibraries.OrchardCore" Version="12.2.0" />
+    <PackageReference Include="Lombiq.Npm.Targets" Version="1.5.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(NuGetBuild)' != 'true'">
+    <ProjectReference Include="..\..\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries.OrchardCore\Lombiq.HelpfulLibraries.OrchardCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="SchemaFiles\CII\*.xsd" />
+    <EmbeddedResource Include="SchemaFiles\CII\*.xsd" />
+    <None Remove="SchemaFiles\UBL\common\*.xsd" />
+    <EmbeddedResource Include="SchemaFiles\UBL\common\*.xsd" />
+    <None Remove="SchemaFiles\UBL\maindoc\UBL-Invoice-2.1.xsd" />
+    <EmbeddedResource Include="SchemaFiles\UBL\maindoc\UBL-Invoice-2.1.xsd" />
+
+    <None Remove="JsonStylesheets\*.sef.json" />
+    <EmbeddedResource Include="JsonStylesheets\*.sef.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="validator.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>true</Pack>
+      <PackagePath>contentFiles\any\any</PackagePath>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
+
+    <!--  Needed for projects that references this module directly.  -->
+    <Content Condition="'$(NuGetBuild)' != 'true'" Include="node_modules\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!--  Needed for projects that uses this project by a NuGet package.  -->
+  <Target Name="AddNodeModules" AfterTargets="NpmDotnetPrebuild">
+    <ItemGroup>
+      <Content Include="node_modules\**\*" Exclude="node_modules\.pnpm\**\*;node_modules\.bin\**\*;">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Pack>true</Pack>
+        <PackagePath>contentFiles\any\any\node_modules</PackagePath>
+        <PackageCopyToOutput>true</PackageCopyToOutput>
+      </Content>
+    </ItemGroup>
+  </Target>
+
+  <!--  Needed for projects that uses this project by a NuGet package.  -->
+  <PropertyGroup>
+    <PnpmInstallCommand>pnpm install --shamefully-hoist</PnpmInstallCommand>
+  </PropertyGroup>
+
+  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\..\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
+
+</Project>

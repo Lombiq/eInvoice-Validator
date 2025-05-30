@@ -10,7 +10,7 @@ Run the project from your IDE.
 
 ## Sample Invoices
 
-The sample invoices are located in the `SampleInvoices` folder. They include both CII and UBL formats. If you want to update them, check the latest [CEN/TC 434 - EN-16931 - Validation artifacts](https://github.com/ConnectingEurope/eInvoicing-EN16931) repository for the latest samples.
+The sample invoices are located in the `SampleInvoices` folder. They include both CII and UBL formats. If you want to update them, check the latest [CEN/TC 434 - EN-16931 - Validation artifacts](https://github.com/ConnectingEurope/eInvoicing-EN16931) repository `cii/examples` and `ubl/examples` folders for the latest samples. They might contain other documents than Invoice, e.g. CreditNote, which we don't support.
 
 ## Contributing and support
 

@@ -33,86 +33,47 @@ These samples don't contain the common setup necessary before you can use the va
 2. Perform full validation (schema + schematron)
 
     ```csharp
-    var validationResult = await InvoiceValidationHelper.ValidateInvoiceAsync(
-        xmlString,
-        nodeJsService,
-        memoryCache,
-        eInvoiceXmlSchemaSet);
+    // DI in constructor the IInvoiceValidationService or get it from the service provider.
+    var invoiceValidationService = serviceProvider.GetRequiredService<IInvoiceValidationService>();
+    
+    // For XML string.
+    var validationResult = await invoiceValidationService.ValidateInvoiceAsync(xmlString);
+    
+    // For XML stream.
+    var validationResult = await invoiceValidationService.ValidateInvoiceAsync(xmlStream);
     
     if (validationResult.Successful)
     {
-        // Invoice is valid.
+       // Invoice is valid.
     }
     
     if (validationResult.HasWarnings)
     {
-        // Handle warnings.
+       // Handle warnings.
     }
     else
     {
-        // Access validationResult.SchemaValidationResult and validationResult.SchematronValidationResult for details.
+       // Access validationResult.SchemaValidationResult and validationResult.SchematronValidationResult for details.
     }
     ```
 
-## Validation Helpers
+## Validation Services
 
-### `SchemaValidationHelper`
+### `InvoiceValidationService`
 
-Validate an XML invoice against the XSD schema only:
+Validate an XML invoice against both the XSD schema and the schematron rules, as the previous example shows.
 
-```csharp
-// For string XML.
-var schemaResult = await SchemaValidationHelper.ValidateXmlAgainstSchemaAsync(
-    xmlString,
-    InvoiceFormat.CII,
-    eInvoiceXmlSchemaSet);
-
-// Or using stream.
-var schemaResult = await SchemaValidationHelper.ValidateXmlAgainstSchemaAsync(
-    xmlStream,
-    InvoiceFormat.CII,
-    eInvoiceXmlSchemaSet);
-
-if (schemaResult.ErrorMessages.Any())
-{
-    // Handle schema validation errors.
-}
-```
-
-### `SchematronValidationHelper`
-
-Validate business rules using schematron only:
+But you can also detect the invoice format (UBL or CII) and validate it accordingly with the [`SchemaValidationService`](#schemavalidationservice) and [`SchematronValidationService`](#schematronvalidationservice):
 
 ```csharp
-using Lombiq.EInvoiceValidator.Helpers;
+// DI in constructor the IInvoiceValidationService or get it from the service provider.
+var invoiceValidationService = serviceProvider.GetRequiredService<IInvoiceValidationService>();
 
-var schematronResult = await SchematronValidationHelper.ExecuteSchematronValidationAsync(
-    xmlString,
-    InvoiceFormat.Ubl,
-    nodeJsService,
-    memoryCache);
-
-if (schematronResult.ErrorFailedAsserts.Any())
-{
-    // Handle schematron errors.
-}
-
-if (schematronResult.WarningFailedAsserts.Any())
-{
-    // Handle schematron warnings.
-}
-```
-
-### `InvoiceFormatHelper`
-
-The `InvoiceFormatHelper` class is used to detect the format of an eInvoice XML (either UBL or CII). It provides async methods to analyze either a string or a stream containing XML and returns the detected `InvoiceFormat` enum value.
-
-```csharp
 // For XML string.
-var format = await InvoiceFormatHelper.DetectFormatAsync(xmlString);
+var format = await invoiceValidationService.DetectFormatAsync(xmlString);
 
 // For XML stream.
-var format = await InvoiceFormatHelper.DetectFormatAsync(xmlStream);
+var format = await invoiceValidationService.DetectFormatAsync(xmlStream);
 
 if (format == InvoiceFormat.UBL)
 {
@@ -128,7 +89,52 @@ else
 }
 ```
 
-This helper is typically used before validation to determine which schema and schematron to apply.
+### `SchemaValidationService`
+
+Validate an XML invoice against the XSD schema only:
+
+```csharp
+// DI in constructor the ISchemaValidationService or get it from the service provider.
+var schemaValidationService = serviceProvider.GetRequiredService<ISchemaValidationService>();
+
+// For string XML.
+var schemaResult = await schemaValidationService.ValidateXmlAgainstSchemaAsync(
+    xmlString,
+    InvoiceFormat.CII);
+
+// Or using stream.
+var schemaResult = await schemaValidationService.ValidateXmlAgainstSchemaAsync(
+    xmlStream,
+    InvoiceFormat.CII);
+
+if (schemaResult.ErrorMessages.Any())
+{
+    // Handle schema validation errors.
+}
+```
+
+### `SchematronValidationService`
+
+Validate business rules using schematron only:
+
+```csharp
+// DI in constructor the ISchematronValidationService or get it from the service provider.
+var schematronValidationService = serviceProvider.GetRequiredService<ISchematronValidationService>();
+
+var schematronResult = await schematronValidationService.ExecuteSchematronValidationAsync(
+    xmlString,
+    InvoiceFormat.Ubl);
+
+if (schematronResult.ErrorFailedAsserts.Any())
+{
+    // Handle schematron errors.
+}
+
+if (schematronResult.WarningFailedAsserts.Any())
+{
+    // Handle schematron warnings.
+}
+```
 
 ## Validation Artifacts
 

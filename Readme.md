@@ -22,8 +22,8 @@ We have a benchmark project to measure the performance of the validation process
 ## Prerequisites
 
 - Node.js (LTS version recommended) is required to run the schematron validation.
-- The library uses the latest (2.7) [SaxonJS](https://www.npmjs.com/package/saxon-js) with Node.js to execute the schematron validation.
-- To have validation files converted from XSLT to SaxonJS compatible .sef.json format, we use [xslt3](https://www.npmjs.com/package/xslt3) command line tool.
+- The library uses the latest (2.7) [SaxonJS](https://www.npmjs.com/package/saxon-js) with Node.js to execute the schematron validation. This is included automatically by the NuGet package.
+- To have validation files converted from XSLT to SaxonJS compatible .sef.json format, we use [xslt3](https://www.npmjs.com/package/xslt3) command line tool. This is included automatically by the NuGet package.
 
 ## Getting Started
 

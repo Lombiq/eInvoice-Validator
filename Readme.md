@@ -10,8 +10,6 @@ Uses [CEN/TC 434 - EN-16931 - Validation artifacts](https://github.com/Connectin
 
 Do you want to quickly try out this project and see it in action? Check it out in our [Open-Source Orchard Core Extensions](https://github.com/Lombiq/Open-Source-Orchard-Core-Extensions) full Orchard Core solution and also see our other useful Orchard Core-related open-source projects!
 
-We have a benchmark project to measure the performance of the validation process. You can find it here: [`Lombiq.EInvoiceValidator.Benchmark`](./Lombiq.EInvoiceValidator.Benchmark/Readme.md).
-
 ## Projects
 
 - The main library for validating eInvoices - [Lombiq.EInvoiceValidator](./Lombiq.EInvoiceValidator/Lombiq.EInvoiceValidator.csproj)
@@ -23,7 +21,7 @@ We have a benchmark project to measure the performance of the validation process
 
 - Node.js (LTS version recommended) is required to run the schematron validation.
 - The library uses the latest (2.7) [SaxonJS](https://www.npmjs.com/package/saxon-js) with Node.js to execute the schematron validation. This is included automatically by the NuGet package.
-- To have validation files converted from XSLT to SaxonJS compatible .sef.json format, we use [xslt3](https://www.npmjs.com/package/xslt3) command line tool. This is included automatically by the NuGet package.
+- To have validation files converted from XSLT to SaxonJS compatible `.sef.json` format, we use [xslt3](https://www.npmjs.com/package/xslt3) command line tool. This is included automatically by the NuGet package.
 
 ## Getting Started
 

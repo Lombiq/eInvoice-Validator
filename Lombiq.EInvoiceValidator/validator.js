@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved -- ESLint does not know where to find external modules. */
 const saxonJs = require('saxon-js');
 const fs = require('fs');
 

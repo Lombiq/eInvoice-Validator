@@ -21,19 +21,19 @@ You can set how many runs you want to perform and the delay between them by sett
 - **Batch Count:** 10
 - **Minimum Delay Between Batches:** 1000 ms
 
-| Batch | Schematron Inner (ms) | Total (ms) |
-|-------|-----------------------|------------|
-| 1 | 168.04 | 548.49 |
-| 2 | 172.86 | 743.295 |
-| 3 | 163.705 | 559.12 |
-| 4 | 162.58 | 951.085 |
-| 5 | 152.595 | 820.25 |
-| 6 | 160.035 | 984.295 |
-| 7 | 158.76 | 604.045 |
-| 8 | 151.955 | 443.965 |
-| 9 | 150.815 | 816.115 |
-| 10 | 160.11 | 758.16 |
-| **AVG** | **160.146** | **722.882** |
+| Batch   | Schematron Inner (ms) | Total (ms)  |
+|---------|-----------------------|-------------|
+| 1       | 168.04                | 548.49      |
+| 2       | 172.86                | 743.295     |
+| 3       | 163.705               | 559.12      |
+| 4       | 162.58                | 951.085     |
+| 5       | 152.595               | 820.25      |
+| 6       | 160.035               | 984.295     |
+| 7       | 158.76                | 604.045     |
+| 8       | 151.955               | 443.965     |
+| 9       | 150.815               | 816.115     |
+| 10      | 160.11                | 758.16      |
+| **AVG** | **160.146**           | **722.882** |
 
 Schematron Inner means the inner process of the schematron validation. Total means the total time taken for the whole validation process, including the Schematron validation and Schema validation. The most time-consuming part is calling the Schematron validation, because it runs in a separate Node.js process. It has to serialize the XML, send it to the Node.js process, run the validation there, and then deserialize the result back to the C# code. Schema validation takes maximum 1-3 ms, so it's not included in the results.
 

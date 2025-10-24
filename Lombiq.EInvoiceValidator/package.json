@@ -4,5 +4,5 @@
     "xslt3": "2.7.0",
     "saxon-js": "2.7.0"
   },
-  "packageManager": "pnpm@8.15.9"
+  "packageManager": "pnpm@9.15.9"
 }

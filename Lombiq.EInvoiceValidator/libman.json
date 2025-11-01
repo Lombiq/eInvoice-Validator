@@ -1,14 +1,13 @@
 {
   "version": "3.0",
   "defaultProvider": "jsdelivr",
+  "defaultDestination": "node_modules/[Name]",
   "libraries": [
     {
-      "library": "xslt3@2.7.0",
-      "destination": "node_modules/xslt3"
+      "library": "xslt3@2.7.0"
     },
     {
-      "library": "saxon-js@2.7.0",
-      "destination": "node_modules/saxon-js"
+      "library": "saxon-js@2.7.0"
     }
   ]
 }

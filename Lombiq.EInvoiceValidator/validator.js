@@ -10,7 +10,7 @@ async function getOrLoadStylesheet(sefPath) {
         stylesheetCache.set(sefPath, stylesheet);
     }
 
-    return stylesheetCache.get(sefPath);
+    return stylesheetCache.get(sefPath)
 }
 
 module.exports = {

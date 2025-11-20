@@ -59,7 +59,7 @@
   </ItemGroup>
 
   <!--  Needed for projects that uses this project by a NuGet package.  -->
-  <Target Name="AddNodeModules" AfterTargets="NpmDotnetPrebuild">
+  <Target Name="AddNodeModules" AfterTargets="LibraryManagerRestore" Condition="'$(NuGetBuild)' == 'true'">
     <ItemGroup>
       <Content Include="node_modules\**\*">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

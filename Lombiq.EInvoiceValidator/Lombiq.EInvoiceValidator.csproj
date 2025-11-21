@@ -1,7 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\..\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.props" />
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <DefaultItemExcludes>$(DefaultItemExcludes);.git*</DefaultItemExcludes>
@@ -23,22 +21,7 @@
   <ItemGroup>
     <None Include="../Readme.md" />
     <None Include="NuGetIcon.png" Pack="true" PackagePath="" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Jering.Javascript.NodeJS" Version="7.0.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
-    <PackageReference Include="Lombiq.HelpfulLibraries.OrchardCore" Version="12.3.0" />
-    <PackageReference Include="Lombiq.Npm.Targets" Version="1.5.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(NuGetBuild)' != 'true'">
-    <ProjectReference Include="..\..\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries.OrchardCore\Lombiq.HelpfulLibraries.OrchardCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="SchemaFiles\CII\*.xsd" />
     <EmbeddedResource Include="SchemaFiles\CII\*.xsd" />
     <None Remove="SchemaFiles\UBL\common\*.xsd" />
@@ -48,9 +31,7 @@
 
     <None Remove="JsonStylesheets\*.sef.json" />
     <EmbeddedResource Include="JsonStylesheets\*.sef.json" />
-  </ItemGroup>
 
-  <ItemGroup>
     <Content Include="validator.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
@@ -64,10 +45,23 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Jering.Javascript.NodeJS" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="3.0.71" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
+    <PackageReference Include="Lombiq.HelpfulLibraries.OrchardCore" Version="12.4.1-alpha.2.osoe-1185" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(NuGetBuild)' != 'true'">
+    <ProjectReference Include="..\..\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries.OrchardCore\Lombiq.HelpfulLibraries.OrchardCore.csproj" />
+  </ItemGroup>
+
   <!--  Needed for projects that uses this project by a NuGet package.  -->
-  <Target Name="AddNodeModules" AfterTargets="NpmDotnetPrebuild">
+  <Target Name="AddNodeModules" AfterTargets="LibraryManagerRestore" Condition="'$(NuGetBuild)' == 'true'">
     <ItemGroup>
-      <Content Include="node_modules\**\*" Exclude="node_modules\.pnpm\**\*;node_modules\.bin\**\*;">
+      <Content Include="node_modules\**\*">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <Pack>true</Pack>
         <PackagePath>contentFiles\any\any\node_modules</PackagePath>
@@ -75,12 +69,5 @@
       </Content>
     </ItemGroup>
   </Target>
-
-  <!--  Needed for projects that uses this project by a NuGet package.  -->
-  <PropertyGroup>
-    <PnpmInstallCommand>pnpm install --shamefully-hoist</PnpmInstallCommand>
-  </PropertyGroup>
-
-  <Import Condition="'$(NuGetBuild)' != 'true'" Project="..\..\..\Utilities\Lombiq.Npm.Targets\Lombiq.Npm.Targets.targets" />
 
 </Project>

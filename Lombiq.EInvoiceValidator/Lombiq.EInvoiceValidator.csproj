@@ -1,27 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <DefaultItemExcludes>$(DefaultItemExcludes);.git*</DefaultItemExcludes>
+    <ImportLombiqHelpfulLibrariesOrchardCore>true</ImportLombiqHelpfulLibrariesOrchardCore>
+  </PropertyGroup>
+
+  <Import Project="..\..\..\Utilities\Lombiq.MSBuild.Targets\Lombiq.MSBuild.Core.Targets\Lombiq.MSBuild.Core.Targets.props" />
+
+  <PropertyGroup>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
     <Title>Lombiq eInvoice Validator</Title>
-    <Authors>Lombiq Technologies</Authors>
     <Copyright>Copyright © 2025, Lombiq Technologies Ltd.</Copyright>
     <Description>Lombiq eInvoice Validator: Adds validation for EU eInvoices that follow the EN 16931 standard. See the project website for detailed documentation.</Description>
-    <PackageIcon>NuGetIcon.png</PackageIcon>
     <PackageTags>OrchardCore;Lombiq;AspNetCore;EN16931;eInvoice;XML;UBL;CII</PackageTags>
     <RepositoryUrl>https://github.com/Lombiq/eInvoice-Validator</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Lombiq/eInvoice-Validator</PackageProjectUrl>
-    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../Readme.md" />
-    <None Include="NuGetIcon.png" Pack="true" PackagePath="" />
-
     <None Remove="SchemaFiles\CII\*.xsd" />
     <EmbeddedResource Include="SchemaFiles\CII\*.xsd" />
     <None Remove="SchemaFiles\UBL\common\*.xsd" />
@@ -48,14 +46,6 @@
   <ItemGroup>
     <PackageReference Include="Jering.Javascript.NodeJS" Version="7.0.0" />
     <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="3.0.71" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
-    <PackageReference Include="Lombiq.HelpfulLibraries.OrchardCore" Version="12.5.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(NuGetBuild)' != 'true'">
-    <ProjectReference Include="..\..\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries.OrchardCore\Lombiq.HelpfulLibraries.OrchardCore.csproj" />
   </ItemGroup>
 
   <!--  Needed for projects that uses this project by a NuGet package.  -->

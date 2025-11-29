@@ -24,7 +24,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Lombiq.EInvoiceValidator\Lombiq.EInvoiceValidator.csproj" />
   </ItemGroup>

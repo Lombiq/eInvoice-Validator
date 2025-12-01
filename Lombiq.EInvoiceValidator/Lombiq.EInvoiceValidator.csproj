@@ -1,16 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Nullable>enable</Nullable>
     <ImportLombiqHelpfulLibrariesOrchardCore>true</ImportLombiqHelpfulLibrariesOrchardCore>
   </PropertyGroup>
 
   <Import Project="..\..\..\Utilities\Lombiq.MSBuild.Targets\Lombiq.MSBuild.Core.Targets\Lombiq.MSBuild.Core.Targets.props" />
 
   <PropertyGroup>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
     <Title>Lombiq eInvoice Validator</Title>
     <Copyright>Copyright © 2025, Lombiq Technologies Ltd.</Copyright>
     <Description>Lombiq eInvoice Validator: Adds validation for EU eInvoices that follow the EN 16931 standard. See the project website for detailed documentation.</Description>

@@ -63,7 +63,7 @@ if (-not (Test-Path "$PSScriptRoot/UBL-2.1"))
 
 # Copy all UBL *.xsd files to SchemaFiles, but keep the folder structure.
 $ublXsdFolder = "$PSScriptRoot/UBL-2.1/xsd"
-$ublXsdFiles = Get-ChildItem -Path $ublXsdFolder -Filter *.xsd -Recurse
+$ublXsdFiles = Get-ChildItem -Path $ublXsdFolder -Filter '*.xsd' -Recurse
 $targetUblXsdFolder = "$PSScriptRoot/SchemaFiles/UBL"
 if (-not (Test-Path $targetUblXsdFolder))
 {

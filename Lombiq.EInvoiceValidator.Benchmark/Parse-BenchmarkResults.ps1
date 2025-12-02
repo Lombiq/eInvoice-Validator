@@ -12,7 +12,7 @@ if (-not (Test-Path $benchmarkFolder))
 $results = @()
 
 # Get all .md files.
-Get-ChildItem -Path $benchmarkFolder -Filter *.md | ForEach-Object {
+Get-ChildItem -Path $benchmarkFolder -Filter '*.md' | ForEach-Object {
     $file = $PSItem
     $content = Get-Content $file.FullName
 

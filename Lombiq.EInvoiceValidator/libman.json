@@ -70,7 +70,7 @@
       "library": "mime-types@3.0.2"
     },
     {
-      "library": "proxy-from-env@2.0.0"
+      "library": "proxy-from-env@2.1.0"
     },
     {
       "library": "saxon-js@2.7.0"

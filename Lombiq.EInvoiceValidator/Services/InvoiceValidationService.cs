@@ -122,7 +122,7 @@ public class InvoiceValidationService : IInvoiceValidationService
                 ("CreditNote", { } s)
                     when s.StartsWithOrdinalIgnoreCase("urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2")
                     => InvoiceFormat.UBL,
-                
+
                 ("CrossIndustryInvoice", { } s)
                     when s.StartsWithOrdinalIgnoreCase("urn:un:unece:uncefact:data:standard:CrossIndustryInvoice")
                     => InvoiceFormat.CII,

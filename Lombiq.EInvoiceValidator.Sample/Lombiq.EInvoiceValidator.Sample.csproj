@@ -1,25 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
+  <Import Condition="'$(NuGetBuild)' != 'true'" Project="../../../Utilities/Lombiq.MSBuild.Targets/Lombiq.MSBuild.Library.Sdk/Sdk/Import.props" />
+  <Import Condition="'$(NuGetBuild)' == 'true'" Project="Sdk.props" Sdk="Lombiq.MSBuild.Library.Sdk" Version="1.0.1-alpha.10.osoe-1208" />
+
   <PropertyGroup>
     <Title>Lombiq eInvoice Validator Sample</Title>
-    <Authors>Lombiq Technologies</Authors>
-    <Copyright>Copyright © 2025, Lombiq Technologies Ltd.</Copyright>
-    <Description>Lombiq eInvoice Validator Sample: Sample console application to showcase the Lombiq eInvoice Validator. See the project website for detailed documentation.</Description>
-    <PackageIcon>NuGetIcon.png</PackageIcon>
+    <CopyrightYear>2025</CopyrightYear>
+    <DescriptionBody>Sample console application to showcase the Lombiq eInvoice Validator. See the project website for detailed documentation.</DescriptionBody>
     <PackageTags>OrchardCore;Lombiq;AspNetCore;EN16931;eInvoice;XML;UBL;CII</PackageTags>
     <RepositoryUrl>https://github.com/Lombiq/eInvoice-Validator</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Lombiq/eInvoice-Validator/Lombiq.EInvoiceValidator.Sample/Readme.md</PackageProjectUrl>
-    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="Readme.md" />
-    <None Include="NuGetIcon.png" Pack="true" PackagePath="" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Lombiq.EInvoiceValidator\Lombiq.EInvoiceValidator.csproj" />
@@ -33,4 +28,7 @@
       <PackageCopyToOutput>true</PackageCopyToOutput>
     </None>
   </ItemGroup>
+
+  <Import Condition="'$(NuGetBuild)' != 'true'" Project="../../../Utilities/Lombiq.MSBuild.Targets/Lombiq.MSBuild.Library.Sdk/Sdk/Import.targets" />
+  <Import Condition="'$(NuGetBuild)' == 'true'" Project="Sdk.targets" Sdk="Lombiq.MSBuild.Library.Sdk" Version="1.0.1-alpha.10.osoe-1208" />
 </Project>

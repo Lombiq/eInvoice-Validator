@@ -157,5 +157,5 @@ public static class ValidationBenchmarkHelpers
         };
 
     private static string ToAverageString(IEnumerable<long> numbers) =>
-        Math.Round(numbers.Average(), 3).ToTechnicalString()!;
+        Math.Round(numbers.Average(), 3, MidpointRounding.AwayFromZero).ToTechnicalString()!;
 }

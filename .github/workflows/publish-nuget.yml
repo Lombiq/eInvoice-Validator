@@ -21,7 +21,7 @@ on:
 jobs:
   publish-nuget:
     name: Publish to NuGet
-    uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@issue/OSOE-1149
+    uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
     with:
       checkout-ref: ${{ github.event_name == 'workflow_dispatch' && format('refs/tags/{0}', inputs.tag) || '' }}
       publish-version: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || 'USE_GITHUB_REF_NAME' }}

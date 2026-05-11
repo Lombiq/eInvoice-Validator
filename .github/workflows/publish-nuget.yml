@@ -4,28 +4,10 @@ on:
   push:
     tags:
       - v*
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: The version tag to publish, for example v1.2.3.
-        required: true
-        type: string
-      require-major-version-for-suppressions:
-        description: >
-          Disable only for exceptional cases where CompatibilitySuppressions.xml files exist but a major version bump
-          is not desired.
-        required: true
-        default: true
-        type: boolean
 
 jobs:
   publish-nuget:
     name: Publish to NuGet
     uses: Lombiq/GitHub-Actions/.github/workflows/publish-nuget.yml@dev
-    with:
-      checkout-ref: ${{ github.event_name == 'workflow_dispatch' && format('refs/tags/{0}', inputs.tag) || '' }}
-      publish-version: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || 'USE_GITHUB_REF_NAME' }}
-      require-major-version-for-compatibility-suppressions: >
-        ${{ github.event_name == 'workflow_dispatch' && (inputs.require-major-version-for-suppressions && 'true' || 'false') || 'true' }}
     secrets:
       API_KEY: ${{ secrets.DEFAULT_NUGET_PUBLISH_API_KEY }}

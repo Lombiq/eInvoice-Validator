@@ -7,7 +7,7 @@
       "library": "asynckit@0.5.0"
     },
     {
-      "library": "axios@1.14.0"
+      "library": "axios@1.15.2"
     },
     {
       "library": "call-bind-apply-helpers@1.0.2"
@@ -34,7 +34,7 @@
       "library": "es-set-tostringtag@2.1.0"
     },
     {
-      "library": "follow-redirects@1.15.11"
+      "library": "follow-redirects@1.16.0"
     },
     {
       "library": "form-data@4.0.5"

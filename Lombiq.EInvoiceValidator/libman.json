@@ -4,16 +4,22 @@
   "defaultDestination": "node_modules/[Name]",
   "libraries": [
     {
+      "library": "agent-base@6.0.2"
+    },
+    {
       "library": "asynckit@0.5.0"
     },
     {
-      "library": "axios@1.16.0"
+      "library": "axios@1.16.1"
     },
     {
       "library": "call-bind-apply-helpers@1.0.2"
     },
     {
       "library": "combined-stream@1.0.8"
+    },
+    {
+      "library": "debug@4.4.3"
     },
     {
       "library": "delayed-stream@1.0.0"
@@ -28,7 +34,7 @@
       "library": "es-errors@1.3.0"
     },
     {
-      "library": "es-object-atoms@1.1.1"
+      "library": "es-object-atoms@1.1.2"
     },
     {
       "library": "es-set-tostringtag@2.1.0"
@@ -61,6 +67,9 @@
       "library": "hasown@2.0.3"
     },
     {
+      "library": "https-proxy-agent@5.0.1"
+    },
+    {
       "library": "math-intrinsics@1.1.0"
     },
     {
@@ -68,6 +77,9 @@
     },
     {
       "library": "mime-types@3.0.2"
+    },
+    {
+      "library": "ms@2.1.3"
     },
     {
       "library": "proxy-from-env@2.1.0"

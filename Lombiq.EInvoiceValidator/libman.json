@@ -64,7 +64,7 @@
       "library": "has-tostringtag@1.0.2"
     },
     {
-      "library": "hasown@2.0.3"
+      "library": "hasown@2.0.4"
     },
     {
       "library": "https-proxy-agent@5.0.1"

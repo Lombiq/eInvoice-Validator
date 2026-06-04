@@ -4,7 +4,7 @@
   "defaultDestination": "node_modules/[Name]",
   "libraries": [
     {
-      "library": "agent-base@6.0.2"
+      "library": "agent-base@9.0.0"
     },
     {
       "library": "asynckit@0.5.0"

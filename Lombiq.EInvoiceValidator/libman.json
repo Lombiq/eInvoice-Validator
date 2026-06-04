@@ -4,7 +4,7 @@
   "defaultDestination": "node_modules/[Name]",
   "libraries": [
     {
-      "library": "agent-base@6.0.2"
+      "library": "agent-base@9.0.0"
     },
     {
       "library": "asynckit@0.5.0"
@@ -64,10 +64,10 @@
       "library": "has-tostringtag@1.0.2"
     },
     {
-      "library": "hasown@2.0.3"
+      "library": "hasown@2.0.4"
     },
     {
-      "library": "https-proxy-agent@5.0.1"
+      "library": "https-proxy-agent@9.0.0"
     },
     {
       "library": "math-intrinsics@1.1.0"

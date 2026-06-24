@@ -16,5 +16,5 @@ var invoiceValidationService = serviceProvider.GetRequiredService<IInvoiceValida
 // Start the benchmark.
 await ValidationBenchmarkHelpers.RunBenchMarkAsync(
     async stream =>
-        /* Step 2. Validate the eInvoice XML file read into a stream using the helper method. */
+        // Step 2. Validate the eInvoice XML file read into a stream using the helper method.
         await invoiceValidationService.ValidateInvoiceAsync(stream));

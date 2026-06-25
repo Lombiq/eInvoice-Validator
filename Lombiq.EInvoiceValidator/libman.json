@@ -70,6 +70,9 @@
       "library": "https-proxy-agent@9.1.0"
     },
     {
+      "library": "proxy-agent-negotiate@1.1.0"
+    },
+    {
       "library": "math-intrinsics@1.1.0"
     },
     {

@@ -67,7 +67,7 @@
       "library": "hasown@2.0.4"
     },
     {
-      "library": "https-proxy-agent@9.0.0"
+      "library": "https-proxy-agent@9.1.0"
     },
     {
       "library": "math-intrinsics@1.1.0"

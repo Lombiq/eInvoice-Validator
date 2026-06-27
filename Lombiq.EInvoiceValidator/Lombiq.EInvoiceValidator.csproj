@@ -1,27 +1,21 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project>
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <DefaultItemExcludes>$(DefaultItemExcludes);.git*</DefaultItemExcludes>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <Import Condition="'$(NuGetBuild)' != 'true'" Project="../../../Utilities/Lombiq.MSBuild.Targets/Lombiq.MSBuild.Library.Sdk/Sdk/Import.props" />
+  <Import Condition="'$(NuGetBuild)' == 'true'" Project="Sdk.props" Sdk="Lombiq.MSBuild.Library.Sdk" Version="1.0.1-alpha.21.osoe-925" />
+
   <PropertyGroup>
     <Title>Lombiq eInvoice Validator</Title>
-    <Authors>Lombiq Technologies</Authors>
-    <Copyright>Copyright © 2025, Lombiq Technologies Ltd.</Copyright>
-    <Description>Lombiq eInvoice Validator: Adds validation for EU eInvoices that follow the EN 16931 standard. See the project website for detailed documentation.</Description>
-    <PackageIcon>NuGetIcon.png</PackageIcon>
+    <CopyrightYear>2025</CopyrightYear>
+    <DescriptionBody>Adds validation for EU eInvoices that follow the EN 16931 standard. See the project website for detailed documentation.</DescriptionBody>
     <PackageTags>OrchardCore;Lombiq;AspNetCore;EN16931;eInvoice;XML;UBL;CII</PackageTags>
     <RepositoryUrl>https://github.com/Lombiq/eInvoice-Validator</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/Lombiq/eInvoice-Validator</PackageProjectUrl>
-    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../Readme.md" />
-    <None Include="NuGetIcon.png" Pack="true" PackagePath="" />
-
     <None Remove="SchemaFiles\CII\*.xsd" />
     <EmbeddedResource Include="SchemaFiles\CII\*.xsd" />
     <None Remove="SchemaFiles\UBL\common\*.xsd" />
@@ -51,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(NuGetBuild)' == 'true'">
-    <PackageReference Include="Lombiq.HelpfulLibraries.OrchardCore" Version="12.5.0" />
+    <PackageReference Include="Lombiq.HelpfulLibraries.OrchardCore" Version="12.6.1-alpha.9.osoe-925" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(NuGetBuild)' != 'true'">
@@ -70,4 +64,6 @@
     </ItemGroup>
   </Target>
 
+  <Import Condition="'$(NuGetBuild)' != 'true'" Project="../../../Utilities/Lombiq.MSBuild.Targets/Lombiq.MSBuild.Library.Sdk/Sdk/Import.targets" />
+  <Import Condition="'$(NuGetBuild)' == 'true'" Project="Sdk.targets" Sdk="Lombiq.MSBuild.Library.Sdk" Version="1.0.1-alpha.21.osoe-925" />
 </Project>

@@ -2,10 +2,8 @@
 using Lombiq.EInvoiceValidator.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using System;
 using System.IO;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -37,11 +35,16 @@ public class ValidatorTests
     [MemberData(nameof(InvoiceFilePaths))]
     public async Task TestInvoiceValidation(string filePath)
     {
-        var directoryTree = new StringBuilder("node_modules directory contents:");
-        WriteTree(directoryTree, new DirectoryInfo("node_modules"), depth: 0);
+        var directoryTree = new StringBuilder("node_modules directory contents:\n");
+        var directoryInfo = new DirectoryInfo("node_modules");
+
+        if (!directoryInfo.Exists)
+        {
+            throw new DirectoryNotFoundException($"The directory \"{directoryInfo.FullName}\" does not exist!");
+        }
+
+        WriteTree(directoryTree, directoryInfo, depth: 0);
         _testOutputHelper.WriteLine(directoryTree.ToString());
-        _testOutputHelper.WriteLine($"::warning title=TestInvoiceValidation::{JsonSerializer.Serialize(directoryTree)}");
-        Console.WriteLine(directoryTree.ToString());
 
         var services = new ServiceCollection();
         services.AddEInvoiceValidationServices();

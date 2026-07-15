@@ -9,7 +9,7 @@ obj/
 bin/
 artifacts/
 wwwroot/
-node_modules/
+!node_modules/
 *.user
 .pnpm-debug.log
 *.orig

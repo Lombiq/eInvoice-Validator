@@ -41,7 +41,6 @@
 
   <ItemGroup>
     <PackageReference Include="Jering.Javascript.NodeJS" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="3.0.114" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(NuGetBuild)' == 'true'">

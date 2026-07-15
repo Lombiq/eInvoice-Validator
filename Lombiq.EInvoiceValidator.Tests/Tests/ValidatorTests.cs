@@ -5,6 +5,7 @@ using Shouldly;
 using System;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -39,6 +40,8 @@ public class ValidatorTests
         var directoryTree = new StringBuilder("node_modules directory contents:");
         WriteTree(directoryTree, new DirectoryInfo("node_modules"), depth: 0);
         _testOutputHelper.WriteLine(directoryTree.ToString());
+        _testOutputHelper.WriteLine($"::warning title=TestInvoiceValidation::{JsonSerializer.Serialize(directoryTree)}");
+        Console.WriteLine(directoryTree.ToString());
 
         var services = new ServiceCollection();
         services.AddEInvoiceValidationServices();

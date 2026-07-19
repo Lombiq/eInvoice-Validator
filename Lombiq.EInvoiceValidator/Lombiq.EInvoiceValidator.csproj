@@ -52,6 +52,18 @@
     <ProjectReference Include="..\..\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries.OrchardCore\Lombiq.HelpfulLibraries.OrchardCore.csproj" />
   </ItemGroup>
 
+  <!--  Needed for projects that uses this project by a NuGet package.  -->
+  <Target Name="AddNodeModules" AfterTargets="LibraryManagerRestore" Condition="'$(NuGetBuild)' == 'true'">
+    <ItemGroup>
+      <Content Include="node_modules\**\*">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Pack>true</Pack>
+        <PackagePath>contentFiles\any\$(TargetFramework)</PackagePath>
+        <PackageCopyToOutput>true</PackageCopyToOutput>
+      </Content>
+    </ItemGroup>
+  </Target>
+
   <Import Condition="'$(NuGetBuild)' != 'true'" Project="../../../Utilities/Lombiq.MSBuild.Targets/Lombiq.MSBuild.Library.Sdk/Sdk/Import.targets" />
   <Import Condition="'$(NuGetBuild)' == 'true'" Project="Sdk.targets" Sdk="Lombiq.MSBuild.Library.Sdk" Version="2.0.0" />
 </Project>

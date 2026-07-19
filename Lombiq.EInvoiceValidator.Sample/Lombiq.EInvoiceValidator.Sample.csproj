@@ -24,7 +24,7 @@
     <None Update="SampleInvoices\**\*.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
-      <PackagePath>contentFiles\any\any</PackagePath>
+      <PackagePath>contentFiles\any\$(TargetFramework)</PackagePath>
       <PackageCopyToOutput>true</PackageCopyToOutput>
     </None>
   </ItemGroup>

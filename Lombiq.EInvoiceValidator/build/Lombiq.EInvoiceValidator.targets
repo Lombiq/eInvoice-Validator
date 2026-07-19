@@ -1,0 +1,18 @@
+<Project>
+
+  <PropertyGroup>
+    <IncludeNodeModulesBaseDir>$(MSBuildThisFileDirectory)..\contentFiles\any\net10.0\</IncludeNodeModulesBaseDir>
+  </PropertyGroup>
+
+  <Target Name="IncludeNodeModules" BeforeTargets="Build">
+    <ItemGroup>
+      <IncludeNodeModulesFiles Include="$(IncludeNodeModulesBaseDir)**\*.*"/>
+    </ItemGroup>
+
+    <Copy
+        SourceFiles="@(IncludeNodeModulesFiles)"
+        DestinationFiles="$(TargetDir)%(RecursiveDir)%(Filename)%(Extension)"
+        SkipUnchangedFiles="true"/>
+  </Target>
+
+</Project>

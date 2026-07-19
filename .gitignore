@@ -12,6 +12,7 @@ wwwroot/
 node_modules/
 *.user
 .pnpm-debug.log
+*.orig
 
 # Mac
 .DS_Store

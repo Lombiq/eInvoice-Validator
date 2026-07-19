@@ -3,6 +3,7 @@ using Lombiq.EInvoiceValidator.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -10,6 +11,8 @@ namespace Lombiq.EInvoiceValidator.Tests.Tests;
 
 public class ValidatorTests
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+
     public static TheoryData<string> InvoiceFilePaths
     {
         get
@@ -25,10 +28,24 @@ public class ValidatorTests
         }
     }
 
+    public ValidatorTests(ITestOutputHelper testOutputHelper) =>
+        _testOutputHelper = testOutputHelper;
+
     [Theory]
     [MemberData(nameof(InvoiceFilePaths))]
     public async Task TestInvoiceValidation(string filePath)
     {
+        var directoryTree = new StringBuilder("node_modules directory contents:\n");
+        var directoryInfo = new DirectoryInfo("node_modules");
+
+        if (!directoryInfo.Exists)
+        {
+            throw new DirectoryNotFoundException($"The directory \"{directoryInfo.FullName}\" does not exist!");
+        }
+
+        WriteTree(directoryTree, directoryInfo, depth: 0);
+        _testOutputHelper.WriteLine(directoryTree.ToString());
+
         var services = new ServiceCollection();
         services.AddEInvoiceValidationServices();
         var serviceProvider = services.BuildServiceProvider();
@@ -47,6 +64,25 @@ public class ValidatorTests
         else
         {
             result.Successful.ShouldBeTrue($"{filePath} should pass validation but did not.");
+        }
+    }
+
+    private static void WriteTree(StringBuilder builder, DirectoryInfo info, int depth)
+    {
+        builder.Append(new string(' ', 2 * depth));
+        builder.AppendLine(info.Name);
+
+        var nextDepth = depth + 1;
+
+        foreach (var child in info.GetDirectories())
+        {
+            WriteTree(builder, child, nextDepth);
+        }
+
+        foreach (var child in info.GetFiles())
+        {
+            builder.Append(new string(' ', 2 * nextDepth));
+            builder.AppendLine(child.Name);
         }
     }
 }

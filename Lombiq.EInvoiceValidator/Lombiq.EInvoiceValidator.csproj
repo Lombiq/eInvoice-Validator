@@ -58,7 +58,7 @@
       <Content Include="node_modules\**\*">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <Pack>true</Pack>
-        <PackagePath>contentFiles\any\$(TargetFramework)</PackagePath>
+        <PackagePath>contentFiles\any\$(TargetFramework)\node_modules</PackagePath>
         <PackageCopyToOutput>true</PackageCopyToOutput>
       </Content>
     </ItemGroup>

@@ -40,7 +40,7 @@
       "library": "es-set-tostringtag@2.1.0"
     },
     {
-      "library": "follow-redirects@1.16.0"
+      "library": "follow-redirects@1.16.1"
     },
     {
       "library": "form-data@4.0.6"

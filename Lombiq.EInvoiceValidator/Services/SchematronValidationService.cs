@@ -91,7 +91,7 @@ public class SchematronValidationService : ISchematronValidationService
         var isError = flag?.EqualsOrdinalIgnoreCase("fatal") == true;
 
         var text = string.Empty;
-        int startDepth = reader.Depth;
+        var startDepth = reader.Depth;
 
         // Read to the end of this <failed-assert> element
         while (reader.Read() &&

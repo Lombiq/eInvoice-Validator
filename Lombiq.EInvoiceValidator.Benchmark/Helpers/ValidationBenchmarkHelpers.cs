@@ -30,7 +30,7 @@ public static class ValidationBenchmarkHelpers
         }
 
         var results = new List<BenchmarkRunResult>();
-        for (int batchIndex = 0; batchIndex < BatchCount; batchIndex++)
+        for (var batchIndex = 0; batchIndex < BatchCount; batchIndex++)
         {
             Console.WriteLine($"Starting batch {(batchIndex + 1).ToTechnicalString()} of {BatchCount}...");
             var stopwatch = Stopwatch.StartNew();
@@ -100,7 +100,7 @@ public static class ValidationBenchmarkHelpers
         logBuilder.AppendLine();
         logBuilder.AppendLine(MarkdownTableHeader());
 
-        for (int i = 0; i < BatchCount; i++)
+        for (var i = 0; i < BatchCount; i++)
         {
             var batch = results.Skip(i * BatchSize).Take(BatchSize).ToList();
             var batchAverages = AverageDurations(batch);
